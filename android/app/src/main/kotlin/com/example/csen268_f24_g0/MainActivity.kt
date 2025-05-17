@@ -1,4 +1,4 @@
-package com.csen268.f24.g0
+package com.csen268.s25.g3
 
 import io.flutter.embedding.android.FlutterActivity
 
