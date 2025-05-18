@@ -34,11 +34,11 @@ We also define `IndexedRoutes` class in [route_name.dart](/lib/navigation/route_
 class IndexedRoutes {
   final List<MyRoute> routes = [
     MyRoute(
-        name: 'images',
-        path: 'images',
-        label: 'Images',
+        name: 'home',
+        path: 'home',
+        label: 'Home',
         icon: Icons.image,
-        child: GenericPage(title: "Images")),
+        child: GenericPage(title: "Home")),
     ...    // other routes here
   ];
 
@@ -82,7 +82,7 @@ GoRouter router(AuthenticationBloc authenticationBloc) {
       GlobalKey<NavigatorState>(debugLabel: "Shell");
   return GoRouter(
       navigatorKey: rootNavigatorKey,
-      initialLocation: "/images",
+      initialLocation: "/home",
       refreshListenable: StreamToListenable([authenticationBloc.stream]),
       redirect: (context, state) {
         ... // redirect logic here
@@ -125,7 +125,7 @@ GoRouter(
           return MyRoutes.signIn.path;
         }
         if (state.fullPath?.startsWith("/signIn") ?? false) {
-          return "/images";
+          return "/home";
         }
       },
       ...

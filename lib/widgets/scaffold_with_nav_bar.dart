@@ -19,7 +19,14 @@ class ScaffoldWithNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: child,
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border:Border(top:BorderSide(
+            color:const Color.fromARGB(255, 129, 30, 45),
+            width:1.0,
+          ))
+        ),
+        child:NavigationBar(
         destinations: List.generate(
           IndexedRoutes().routes.length,
           (index) {
@@ -35,6 +42,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
         selectedIndex: _calculateSelectedIndex(context),
         onDestinationSelected: (int idx) => _onItemTapped(idx, context),
       ),
+    ),
     );
   }
 

@@ -9,7 +9,7 @@ class SignInHeader extends StatelessWidget {
       padding: EdgeInsets.all(20),
       width: 100,
       height: 100,
-      child: Image.asset("assets/icons/launcher_icon.png"),
+      child: Image.asset("assets/icons/sc-online-color-logo.png"),
     );
   }
 }

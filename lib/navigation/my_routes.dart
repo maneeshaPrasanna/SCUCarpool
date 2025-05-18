@@ -15,23 +15,23 @@ class MyRoutes {
 class IndexedRoutes {
   final List<MyRoute> routes = [
     MyRoute(
-        name: 'images',
-        path: 'images',
-        label: 'Images',
-        icon: Icons.image,
-        child: GenericPage(title: "Images")),
+        name: 'carpool',
+        path: 'carpool',
+        label: 'Home',
+        icon: Icons.home,
+        child: GenericPage(title: "Home")),
     MyRoute(
-        name: 'articles',
-        path: 'articles',
-        label: 'Articles',
-        icon: Icons.text_snippet,
+        name: 'search',
+        path: 'search',
+        label: 'Search',
+        icon: Icons.search,
         child: ArticlesPage()),
     MyRoute(
-        name: 'chat',
-        path: 'chat',
-        label: 'Chat',
-        icon: Icons.chat,
-        child: GenericPage(title: "Chat")),
+        name: 'history',
+        path: 'history',
+        label: 'History',
+        icon: Icons.history,
+        child: GenericPage(title: "History")),
     MyRoute(
         name: 'profile',
         path: 'profile',

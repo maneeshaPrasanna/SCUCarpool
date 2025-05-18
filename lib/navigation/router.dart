@@ -36,7 +36,7 @@ GoRouter router(AuthenticationBloc authenticationBloc) {
   return GoRouter(
       //observers: [MyNavObserver()],
       navigatorKey: rootNavigatorKey,
-      initialLocation: "/images",
+      initialLocation: "/carpool",
       refreshListenable: StreamToListenable([authenticationBloc.stream]),
       redirect: (context, state) {
         AuthenticationState authenticationState =
@@ -49,7 +49,7 @@ GoRouter router(AuthenticationBloc authenticationBloc) {
           return MyRoutes.signIn.path;
         }
         if (state.fullPath?.startsWith("/signIn") ?? false) {
-          return "/images";
+          return "/carpool";
         }
       },
       routes: [
