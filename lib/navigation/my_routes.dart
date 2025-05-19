@@ -32,12 +32,7 @@ class IndexedRoutes {
         label: 'History',
         icon: Icons.history,
         child: GenericPage(title: "History")),
-    MyRoute(
-        name: 'profile',
-        path: 'profile',
-        label: 'Profile',
-        icon: Icons.person,
-        child: ProfilePage()),
+
   ];
 
   int getIndex(String path) {

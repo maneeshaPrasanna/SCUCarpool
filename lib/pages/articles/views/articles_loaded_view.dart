@@ -18,10 +18,29 @@ class ArticlesLoadedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MainDrawer(),
-      appBar: AppBar(title: Text("Articles"), actions: [
-        TextButton(child: Text("Add"), onPressed: addArticleCallback)
-      ]),
+      drawer: MainDrawer(),   
+      appBar: AppBar(
+  centerTitle: true,
+  title: const Text(
+    "Search",
+    style: TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontSize: 24,
+    ),
+  ),
+  backgroundColor: const Color.fromARGB(255, 129, 30, 45),
+  actions: [
+    TextButton(
+      onPressed: addArticleCallback,
+      child: const Text(
+        "Add",
+        style: TextStyle(color: Colors.white), // 添加文字颜色使其在深色背景上可见
+      ),
+    ),
+  ],
+),
+
       body: ListView(
           children: articles.map((article) {
         return GestureDetector(

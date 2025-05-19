@@ -9,11 +9,14 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: MainDrawer(),
-        appBar: AppBar(title: Text("Profile"), actions: [
-          LoggedInUserAvatar(
-            userAvatarSize: UserAvatarSize.small,
-          )
-        ]),
+         appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          "SCU Carpool",
+          style: TextStyle(color:Colors.white, fontWeight: FontWeight.bold,fontSize: 24),
+        ),
+        backgroundColor: const Color.fromARGB(255, 129, 30, 45),
+      ),
         body: Center(child: Text("Profile")));
   }
 }

@@ -8,7 +8,14 @@ class ArticlesLoadingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: MainDrawer(),
-        appBar: AppBar(title: Text("Articles")),
+         appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          "Search",
+          style: TextStyle(color:Colors.white, fontWeight: FontWeight.bold,fontSize: 24),
+        ),
+        backgroundColor: const Color.fromARGB(255, 129, 30, 45),
+      ),
         body: Center(child: CircularProgressIndicator()));
   }
 }

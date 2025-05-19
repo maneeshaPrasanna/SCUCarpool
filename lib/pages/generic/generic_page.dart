@@ -9,11 +9,14 @@ class GenericPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title), actions: [
-        LoggedInUserAvatar(
-          userAvatarSize: UserAvatarSize.small,
-        )
-      ]),
+       appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          title,
+          style: TextStyle(color:Colors.white, fontWeight: FontWeight.bold,fontSize: 24),
+        ),
+        backgroundColor: const Color.fromARGB(255, 129, 30, 45),
+      ),
       body: Center(
         child: Text(title),
       ),
