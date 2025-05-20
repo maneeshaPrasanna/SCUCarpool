@@ -1,16 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-
 import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
 import 'package:santa_clara/widgets/brightness_selector.dart';
 import 'package:santa_clara/widgets/email_verification_button.dart';
 import 'package:santa_clara/widgets/logged_in_user_avatar.dart';
+import 'package:santa_clara/pages/profile/profile_page.dart';
 
 class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key, this.navigationItems});
@@ -21,75 +18,35 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
-  File? _avatarFile;
+  final user = FirebaseAuth.instance.currentUser;
 
-  Future<void> _pickAvatarImage() async {
-    final picker = ImagePicker();
-    final pickedImage =
-        await picker.pickImage(source: ImageSource.gallery); // 从图库选择图片
-    if (pickedImage != null) {
-      setState(() {
-        _avatarFile = File(pickedImage.path);
-      });
-    }
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
+
+  String email = '';
+  String avatarUrl = '';
+  bool isEditing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
   }
 
-  Future<void> _editUserProfile() async {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return;
-
-  final docRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
-  final doc = await docRef.get();
-  final currentName = doc.data()?['name'] ?? '';
-  final currentPhone = doc.data()?['phoneNumber'] ?? '';
-
-  final nameController = TextEditingController(text: currentName);
-  final phoneController = TextEditingController(text: currentPhone);
-
-  await showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Edit Profile'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
-            ),
-            TextField(
-              controller: phoneController,
-              decoration: const InputDecoration(labelText: 'Phone Number'),
-              keyboardType: TextInputType.phone,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await docRef.update({
-                'name': nameController.text.trim(),
-                'phoneNumber': phoneController.text.trim(),
-              });
-              Navigator.of(context).pop();
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Profile updated')),
-              );
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+  Future<void> _loadUserData() async {
+    if (user == null) return;
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get();
+    final data = doc.data() ?? {};
+    setState(() {
+      nameController.text = data['name'] ?? '';
+      phoneController.text = data['phoneNumber'] ?? '';
+      email = user!.email ?? '';
+      avatarUrl = data['avatarUrl'] ?? '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,42 +57,47 @@ class _MainDrawerState extends State<MainDrawer> {
             padding: const EdgeInsets.all(10.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              DrawerHeader(
-                child: Container(
-                  width: double.infinity,
-                  height: 400,
-                  child: _avatarFile != null
-                      ? CircleAvatar(
-                          radius: 80,
-                          backgroundImage: FileImage(_avatarFile!),
-                        )
-                      : const LoggedInUserAvatar(
-                          userAvatarSize: UserAvatarSize.large,
-                        ),
+              // ✅ Avatar 居中
+              Center(
+                child: avatarUrl.isNotEmpty
+                    ? CircleAvatar(
+                        radius: 60,
+                        backgroundImage: NetworkImage(avatarUrl),
+                      )
+                    : const LoggedInUserAvatar(
+                        userAvatarSize: UserAvatarSize.large),
+              ),
+
+              const SizedBox(height: 16),
+
+              Card(
+                elevation: 0, // ✅ 去掉阴影
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)), // ✅ 可选：去圆角
+                color: Colors.transparent,
+
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      _buildInfoRow(label: 'Name', value: nameController.text),
+                      const SizedBox(height: 10),
+                      _buildInfoRow(
+                          label: 'Phone', value: phoneController.text),
+                    ],
+                  ),
                 ),
-              ),
-              if (widget.navigationItems != null) ...widget.navigationItems!,
-              TextButton.icon(
-                icon: const Icon(Icons.image),
-                label: const Text("Change Avatar"),
-                onPressed: _pickAvatarImage,
-              ),
-              TextButton.icon(
-                icon: const Icon(Icons.edit),
-                label: const Text("Edit Profile"),
-                onPressed: _editUserProfile,
               ),
 
               TextButton.icon(
-                icon: const Icon(Icons.commute),
-                label: const Text("My Car"),
-                onPressed: () {},
-              ),
-               TextButton.icon(
-                icon: const Icon(Icons.help),
-                label: const Text("Help"),
-                onPressed: () {},
-              ),
+                  icon: const Icon(Icons.edit),
+                  label: const Text("Edit Profile"),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const ProfilePage()),
+                    );
+                  }),
+
               const EmailVerificationButton(),
               TextButton.icon(
                 icon: const Icon(Icons.logout),
@@ -158,6 +120,30 @@ class _MainDrawerState extends State<MainDrawer> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoRow({required String label, required String value}) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 80,
+          child: Text(
+            '$label:',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value.isNotEmpty ? value : 'Not provided',
+            style: const TextStyle(fontSize: 16),
+          ),
+        ),
+      ],
     );
   }
 }
