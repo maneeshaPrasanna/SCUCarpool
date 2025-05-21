@@ -27,11 +27,17 @@ class IndexedRoutes {
         icon: Icons.search,
         child: ArticlesPage()),
     MyRoute(
-        name: 'history',
-        path: 'history',
-        label: 'History',
+        name: 'ride',
+        path: 'ride',
+        label: 'Ride',
+        icon: Icons.public,
+        child: GenericPage(title: "Offer a ride")),
+    MyRoute(
+        name: 'activity',
+        path: 'activity',
+        label: 'Activity',
         icon: Icons.history,
-        child: GenericPage(title: "History")),
+        child: GenericPage(title: "Activity")),
 
   ];
 
