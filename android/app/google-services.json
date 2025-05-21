@@ -1,0 +1,67 @@
+{
+    "project_info": {
+      "project_number": "1082491804467",
+      "project_id": "csen268-s25-g3",
+      "storage_bucket": "csen268-s25-g3.firebasestorage.app"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:1082491804467:android:de162bbbb055c1b9c67c46",
+          "android_client_info": {
+            "package_name": "com.csen268.s25.g3"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyC7pHZ9WK1xYVJwn-a9inlYdbB7he97KkY"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:1082491804467:android:7dc8fcde03db7a62c67c46",
+          "android_client_info": {
+            "package_name": "com.csen268.s25.myapp"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyC7pHZ9WK1xYVJwn-a9inlYdbB7he97KkY"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:1082491804467:android:5f01cf281338f6ebc67c46",
+          "android_client_info": {
+            "package_name": "com.example.books"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyC7pHZ9WK1xYVJwn-a9inlYdbB7he97KkY"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
