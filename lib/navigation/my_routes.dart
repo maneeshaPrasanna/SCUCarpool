@@ -1,11 +1,10 @@
-import 'package:santa_clara/pages/articles/articles_page.dart';
 import 'package:santa_clara/pages/generic/generic_page.dart';
 import 'package:santa_clara/pages/offer_ride.dart';
 import 'package:santa_clara/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:santa_clara/pages/search_page.dart';
-// import 'package:go_router/go_router.dart';
+import 'package:santa_clara/pages/settings/setting_page.dart';
+import 'package:go_router/go_router.dart';
 
 class MyRoutes {
   static MyRoute home = MyRoute(name: 'home', path: '/');
@@ -23,23 +22,17 @@ class IndexedRoutes {
         icon: Icons.home,
         child: const GenericPage(title: "Home")),
     MyRoute(
-        name: 'search',
-        path: 'search',
-        label: 'Search',
-        icon: Icons.search,
-        child: PlanYourRidePage()),
-    MyRoute(
-        name: 'ride',
-        path: 'ride',
-        label: 'Ride',
-        icon: Icons.public,
-        child: const OfferRidePage()),
-    MyRoute(
         name: 'activity',
         path: 'activity',
         label: 'Activity',
         icon: Icons.history,
         child: const GenericPage(title: "Activity")),
+    MyRoute(
+        name: 'settings',
+        path: 'settings',
+        label: 'Settings',
+        icon: Icons.settings,
+        child: const SettingPage(title: "Settings")),
   ];
 
   int getIndex(String path) {

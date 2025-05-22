@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
-import 'package:santa_clara/widgets/brightness_selector.dart';
 import 'package:santa_clara/widgets/email_verification_button.dart';
 import 'package:santa_clara/widgets/logged_in_user_avatar.dart';
 import 'package:santa_clara/pages/profile/profile_page.dart';
@@ -69,6 +65,7 @@ class _MainDrawerState extends State<MainDrawer> {
               ),
 
               const SizedBox(height: 16),
+              const Divider(),
 
               Card(
                 elevation: 0, // ✅ 去掉阴影
@@ -99,23 +96,8 @@ class _MainDrawerState extends State<MainDrawer> {
                   }),
 
               const EmailVerificationButton(),
-              TextButton.icon(
-                icon: const Icon(Icons.logout),
-                label: const Text("Sign Out"),
-                onPressed: () {
-                  BlocProvider.of<AuthenticationBloc>(context)
-                      .add(AuthenticationSignOutEvent());
-                },
-              ),
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Text(
-                  "Display settings",
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-              ),
-              const BrightnessSelector(),
+             
+          
             ]),
           ),
         ),

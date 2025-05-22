@@ -21,7 +21,7 @@ class _UserProfilePageState extends State<ProfilePage> {
 
   String email = '';
   String avatarUrl = '';
-  bool isEditing = false;
+  bool isEditing = true;
   File? _newAvatarFile;
 
   @override

@@ -24,8 +24,7 @@ class LoggedInUserAvatar extends StatelessWidget {
         radius = 25;
         break;
       case UserAvatarSize.large:
-      default:
-        radius = 40;
+      radius = 40;
         break;
     }
 
