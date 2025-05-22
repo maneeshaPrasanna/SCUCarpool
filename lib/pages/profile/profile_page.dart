@@ -82,9 +82,13 @@ class _UserProfilePageState extends State<ProfilePage> {
       _newAvatarFile = null;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Profile updated')),
-    );
+    if (mounted) {
+      Navigator.pop(context,true); // 返回上一页
+    }
+
+    //ScaffoldMessenger.of(context).showSnackBar(
+    //  const SnackBar(content: Text('Profile updated')),
+    //);
   }
 
   @override
@@ -146,7 +150,7 @@ class _UserProfilePageState extends State<ProfilePage> {
                  backgroundColor: const Color.fromARGB(255, 129, 30, 45),
                 foregroundColor: Colors.white, // ✅ 设置字体颜色
               ),
-              child: Text(isEditing ? 'Save' : 'Edit Profile'),
+              child: Text('Save'),
             ),
           ],
         ),
