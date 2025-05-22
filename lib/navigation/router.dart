@@ -51,12 +51,13 @@ GoRouter router(AuthenticationBloc authenticationBloc) {
         if (state.fullPath?.startsWith("/signIn") ?? false) {
           return "/carpool";
         }
+        return null;
       },
       routes: [
         GoRoute(
           name: MyRoutes.home.name,
           path: MyRoutes.home.path,
-          builder: (context, state) => HomePage(),
+          builder: (context, state) => const HomePage(),
           routes: [
             ShellRoute(
               // observers: [MyNavObserver()],
@@ -73,12 +74,12 @@ GoRouter router(AuthenticationBloc authenticationBloc) {
         GoRoute(
           name: MyRoutes.verifyEmail.name,
           path: MyRoutes.verifyEmail.path,
-          builder: (context, state) => VerifyEmailPage(),
+          builder: (context, state) => const VerifyEmailPage(),
         ),
         GoRoute(
           name: MyRoutes.signIn.name,
           path: MyRoutes.signIn.path,
-          builder: (context, state) => SignInPage(),
+          builder: (context, state) => const SignInPage(),
         ),
       ]);
 }

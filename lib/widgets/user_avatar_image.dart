@@ -11,8 +11,8 @@ class UserAvatarImage extends StatelessWidget {
     return CircleAvatar(
       radius: radius,
       child: Text(
-        user.displayName.isNotEmpty
-            ? user.displayName[0].toUpperCase()
+        user.name.isNotEmpty
+            ? user.name[0].toUpperCase()
             : user.email[0].toUpperCase(),
       ),
     );

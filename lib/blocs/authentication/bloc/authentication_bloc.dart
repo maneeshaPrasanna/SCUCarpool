@@ -67,9 +67,11 @@ class AuthenticationBloc
     user = User(
       email: authUser.email!,
       uid: authUser.uid!,
-      displayName: authUser.displayName ?? "",
+      name: authUser.displayName ?? "",
       imageUrl: authUser.imageUrl ?? Mock.imageUrl(),
       emailVerified: authUser.emailVerified ?? false,
+      phoneNumber: "",
+      createdAt: DateTime.now(),
     );
     if (user!.emailVerified) {
       add(AuthenticationSignedInEvent());

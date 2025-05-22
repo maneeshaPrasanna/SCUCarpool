@@ -30,6 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_maps_flutter: ^2.5.0
+  flutter_google_places_sdk: ^0.3.0
+  http: ^1.0.0
+  #google_maps_webservice: 0.0.20-nullsafety.5
   flutter_web_plugins:
     sdk: flutter
 
@@ -51,6 +55,9 @@ dependencies:
   flutter_launcher_icons: ^0.14.1
   image_picker: ^1.0.4
   firebase_storage: ^12.3.4
+  equatable: ^2.0.5
+  provider: ^6.1.1
+ 
 
 
 flutter_launcher_icons:
