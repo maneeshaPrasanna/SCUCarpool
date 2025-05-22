@@ -1,4 +1,5 @@
 import 'package:santa_clara/pages/generic/generic_page.dart';
+import 'package:santa_clara/pages/home/home_page.dart';
 import 'package:santa_clara/pages/offer_ride.dart';
 import 'package:santa_clara/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,12 @@ class MyRoutes {
 class IndexedRoutes {
   final List<MyRoute> routes = [
     MyRoute(
-        name: 'carpool',
-        path: 'carpool',
-        label: 'Home',
-        icon: Icons.home,
-        child: const GenericPage(title: "Home")),
+      name: 'carpool',
+      path: 'carpool',
+      label: 'Home',
+      icon: Icons.home,
+      child: const HomePage(),
+    ),
     MyRoute(
         name: 'activity',
         path: 'activity',
