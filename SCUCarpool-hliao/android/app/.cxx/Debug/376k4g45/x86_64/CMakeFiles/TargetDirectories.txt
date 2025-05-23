@@ -1,0 +1,2 @@
+C:/Users/Ayaz/Desktop/SCUCarpool-hliao-CG/SCUCarpool-hliao/android/app/.cxx/Debug/376k4g45/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/Ayaz/Desktop/SCUCarpool-hliao-CG/SCUCarpool-hliao/android/app/.cxx/Debug/376k4g45/x86_64/CMakeFiles/rebuild_cache.dir
