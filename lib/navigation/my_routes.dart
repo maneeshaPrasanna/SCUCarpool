@@ -2,7 +2,7 @@ import 'package:santa_clara/pages/generic/generic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:santa_clara/pages/settings/setting_page.dart';
-import 'package:go_router/go_router.dart';
+
 
 class MyRoutes {
   static MyRoute home = MyRoute(name: 'home', path: '/');
@@ -18,19 +18,19 @@ class IndexedRoutes {
         path: 'carpool',
         label: 'Home',
         icon: Icons.home,
-        child: GenericPage(title: "Home")),  
+        child: const GenericPage(title: "Home")),  
     MyRoute(
         name: 'activity',
         path: 'activity',
         label: 'Activity',
         icon: Icons.history,
-        child: GenericPage(title: "Activity")),
+        child: const GenericPage(title: "Activity")),
     MyRoute(
         name: 'settings',
         path: 'settings',
         label: 'Settings',
         icon: Icons.settings,
-        child: SettingPage(title:"Settings")),
+        child: const SettingPage(title:"Settings")),
 
   ];
 

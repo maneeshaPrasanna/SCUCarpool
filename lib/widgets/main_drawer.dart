@@ -25,7 +25,8 @@ class _MainDrawerState extends State<MainDrawer> {
   String avatarUrl = '';
   String maker = '';
   String model = '';
-  String plateNumber = '';
+  String carColor = '';
+  String plate= '';
 
   @override
   void initState() {
@@ -54,7 +55,8 @@ class _MainDrawerState extends State<MainDrawer> {
       carData = data;
       maker = data['maker'] ?? '';
       model = data['model'] ?? '';
-      plateNumber = data['plateNumber'] ?? '';
+      carColor = data['carColor'] ?? '';
+      plate = data['plate'] ?? '';
     });
       
     
@@ -76,7 +78,7 @@ class _MainDrawerState extends State<MainDrawer> {
               ),
               const SizedBox(height: 16),
         
-              // ✅ 合并后的信息卡片
+              // Card
               Card(
                 elevation: 0,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -85,6 +87,12 @@ class _MainDrawerState extends State<MainDrawer> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 10),
+                      const Divider(color: const Color.fromARGB(255, 129, 30, 45)),
+
+                      const Text("Profile",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold  ),),
+                        
                      
                       const SizedBox(height: 10),
                       _buildInfoRow(label: 'Name', value: name),
@@ -93,19 +101,26 @@ class _MainDrawerState extends State<MainDrawer> {
 
                       if (carData != null) ...[
                         const SizedBox(height: 10),
+                        const Divider(color: const Color.fromARGB(255, 129, 30, 45)),
+                        const Text("Car Information",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                        const SizedBox(height: 10),
                         _buildInfoRow(label: 'Maker', value: maker),
                         const SizedBox(height: 10),
                         _buildInfoRow(label: 'Model', value: model),
                         const SizedBox(height: 10),
-                        _buildInfoRow(label: 'Plate No.', value: plateNumber),
+                        _buildInfoRow(label: 'Color', value: carColor),
+                        const SizedBox(height: 10),
+                        _buildInfoRow(label: 'Plate', value: plate),
+                        const Divider(color: const Color.fromARGB(255, 129, 30, 45)),
                         
                       ],
                     ],
                   ),
                 ),
               ),
-
-              // ✅ 编辑个人信息
+              
+              // profile
               TextButton.icon(
                 icon: const Icon(Icons.edit),
                 label: const Text("Edit Profile"),
@@ -114,12 +129,12 @@ class _MainDrawerState extends State<MainDrawer> {
                     MaterialPageRoute(builder: (_) => const ProfilePage()),
                   );
                   if (result == true) {
-                    await _loadUserData(); // 重新加载用户信息
+                    await _loadUserData(); // load user data
                   }
                 },
               ),  
 
-              // ✅ 添加/编辑车辆信息
+              // add/edit car info
               TextButton.icon(
                 icon: const Icon(Icons.emoji_transportation),
                 label: Text(carData == null ? "Add a Car" : "Edit Car Info"),

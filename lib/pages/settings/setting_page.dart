@@ -18,25 +18,35 @@ class SettingPage extends StatelessWidget {
         ),
         backgroundColor: const Color.fromARGB(255, 129, 30, 45),
       ),
-      body:  Column(crossAxisAlignment: CrossAxisAlignment.start, children:[
-         TextButton.icon(
-                icon: const Icon(Icons.logout),
-                label: const Text("Sign Out"),
-                onPressed: () {
-                  BlocProvider.of<AuthenticationBloc>(context)
-                      .add(AuthenticationSignOutEvent());
-                },
-              ),
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Text(
-                  "Display settings",
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-              ),
-              const BrightnessSelector(),
-      ]),
+      body: Container(
+  padding: const EdgeInsets.all(16.0), 
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        "Display Settings",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          
+        ),
+      ),
+      const SizedBox(height: 16), 
+      const BrightnessSelector(),
+      const SizedBox(height: 16),
+      Divider(),
+      TextButton.icon(
+        icon: const Icon(Icons.logout),
+        label: const Text("Sign Out"),
+        onPressed: () {
+          BlocProvider.of<AuthenticationBloc>(context)
+              .add(AuthenticationSignOutEvent());
+        },
+      ),
+    ],
+  ),
+),
+
       drawer: MainDrawer(),
     );
   }

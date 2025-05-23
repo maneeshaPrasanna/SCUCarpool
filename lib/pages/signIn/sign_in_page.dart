@@ -42,7 +42,8 @@ class SignInPage extends StatelessWidget {
         'uid': uid,
         'maker': '',
         'model': '',
-        'plateNumber': '',
+        'carColor': '',
+        'plate': '',
       });
     } else {
       print('Car document already exists for uid: $uid');
@@ -68,7 +69,7 @@ class SignInPage extends StatelessWidget {
         headerBuilder: (context, constraints, shrinkOffset) => const SignInHeader(),
         providers: [EmailAuthProvider()],
         actions: [
-          // 注册时创建用户和车辆文档
+          // create user and car doc while register
           AuthStateChangeAction<UserCreated>((context, state) async {
             final user = auth.FirebaseAuth.instance.currentUser;
             if (user != null) {
@@ -76,7 +77,7 @@ class SignInPage extends StatelessWidget {
             }
           }),
 
-          // 登录时若文档不存在则创建
+          // if no user and car doc, create it while login
           AuthStateChangeAction<SignedIn>((context, state) async {
             final user = auth.FirebaseAuth.instance.currentUser;
             if (user != null) {
