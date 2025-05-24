@@ -26,7 +26,7 @@ class _MainDrawerState extends State<MainDrawer> {
   String maker = '';
   String model = '';
   String carColor = '';
-  String plate= '';
+  String plate = '';
 
   @override
   void initState() {
@@ -37,7 +37,10 @@ class _MainDrawerState extends State<MainDrawer> {
 
   Future<void> _loadUserData() async {
     if (user == null) return;
-    final doc = await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get();
     final data = doc.data() ?? {};
     setState(() {
       name = data['name'] ?? '';
@@ -49,7 +52,10 @@ class _MainDrawerState extends State<MainDrawer> {
 
   Future<void> _loadCarData() async {
     if (user == null) return;
-    final doc = await FirebaseFirestore.instance.collection('cars').doc(user!.uid).get();
+    final doc = await FirebaseFirestore.instance
+        .collection('cars')
+        .doc(user!.uid)
+        .get();
     final data = doc.data() ?? {};
     setState(() {
       carData = data;
@@ -58,8 +64,6 @@ class _MainDrawerState extends State<MainDrawer> {
       carColor = data['carColor'] ?? '';
       plate = data['plate'] ?? '';
     });
-      
-    
   }
 
   @override
@@ -73,37 +77,69 @@ class _MainDrawerState extends State<MainDrawer> {
             children: [
               Center(
                 child: avatarUrl.isNotEmpty
-                    ? CircleAvatar(radius: 60, backgroundImage: NetworkImage(avatarUrl))
-                    : const LoggedInUserAvatar(userAvatarSize: UserAvatarSize.large),
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundImage: NetworkImage(avatarUrl),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                email,
+                                style: const TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              ),
+                              if (user!.emailVerified)
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 6),
+                                  child: Icon(Icons.verified_user_outlined,
+                                      color: Colors.black54),
+                                ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : const LoggedInUserAvatar(
+                        userAvatarSize: UserAvatarSize.large),
               ),
-              const SizedBox(height: 16),
-        
+
+              const SizedBox(height: 4),
+
               // Card
               Card(
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 10),
-                      const Divider(color: const Color.fromARGB(255, 129, 30, 45)),
-
-                      const Text("Profile",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold  ),),
-                        
-                     
+                      const Divider(
+                          color: const Color.fromARGB(255, 129, 30, 45)),
+                      const Text(
+                        "Profile",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 10),
                       _buildInfoRow(label: 'Name', value: name),
                       const SizedBox(height: 10),
                       _buildInfoRow(label: 'Phone', value: phone),
-
                       if (carData != null) ...[
                         const SizedBox(height: 10),
-                        const Divider(color: const Color.fromARGB(255, 129, 30, 45)),
-                        const Text("Car Information",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                        const Divider(
+                            color: const Color.fromARGB(255, 129, 30, 45)),
+                        const Text(
+                          "Car Information",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(height: 10),
                         _buildInfoRow(label: 'Maker', value: maker),
                         const SizedBox(height: 10),
@@ -112,14 +148,14 @@ class _MainDrawerState extends State<MainDrawer> {
                         _buildInfoRow(label: 'Color', value: carColor),
                         const SizedBox(height: 10),
                         _buildInfoRow(label: 'Plate', value: plate),
-                        const Divider(color: const Color.fromARGB(255, 129, 30, 45)),
-                        
+                        const Divider(
+                            color: const Color.fromARGB(255, 129, 30, 45)),
                       ],
                     ],
                   ),
                 ),
               ),
-              
+
               // profile
               TextButton.icon(
                 icon: const Icon(Icons.edit),
@@ -132,7 +168,7 @@ class _MainDrawerState extends State<MainDrawer> {
                     await _loadUserData(); // load user data
                   }
                 },
-              ),  
+              ),
 
               // add/edit car info
               TextButton.icon(
@@ -144,7 +180,7 @@ class _MainDrawerState extends State<MainDrawer> {
                   );
                   if (result == true) {
                     setState(() => carData = null);
-                    await _loadCarData(); // 重新加载车辆信息
+                    await _loadCarData(); // reload car info
                   }
                 },
               ),

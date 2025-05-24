@@ -23,7 +23,7 @@ void main() async {
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),
   ]);
-  Bloc.observer = AppBlocObserver();
+  Bloc.observer = const AppBlocObserver();
   runApp(MyApp());
 }
 
@@ -34,7 +34,7 @@ class AppBlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
     super.onChange(bloc, change);
-    if (bloc is Cubit) print(change);
+    //if (bloc is Cubit) print(change);
   }
 
   @override

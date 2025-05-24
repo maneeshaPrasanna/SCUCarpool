@@ -1,4 +1,4 @@
-import 'package:santa_clara/widgets/logged_in_user_avatar.dart';
+
 import 'package:santa_clara/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +20,7 @@ class GenericPage extends StatelessWidget {
       body: Center(
         child: Text(title),
       ),
-      drawer: MainDrawer(),
+      drawer: const MainDrawer(),
     );
   }
 }

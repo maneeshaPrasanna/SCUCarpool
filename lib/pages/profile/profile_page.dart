@@ -15,6 +15,7 @@ class ProfilePage extends StatefulWidget {
 
 class _UserProfilePageState extends State<ProfilePage> {
   final user = FirebaseAuth.instance.currentUser;
+  final emailController = TextEditingController();
 
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
@@ -40,6 +41,7 @@ class _UserProfilePageState extends State<ProfilePage> {
     setState(() {
       nameController.text = data['name'] ?? '';
       phoneController.text = data['phoneNumber'] ?? '';
+      emailController.text = data['email']??'';
       email = user!.email ?? '';
       avatarUrl = data['avatarUrl'] ?? '';
     });
@@ -132,9 +134,11 @@ class _UserProfilePageState extends State<ProfilePage> {
               decoration: const InputDecoration(labelText: 'Name'),
             ),
             TextField(
+              controller: emailController,
               enabled: false,
-              decoration: InputDecoration(labelText: 'Email', hintText: email),
+              decoration: InputDecoration(labelText: 'Email'),
             ),
+            
             TextField(
               controller: phoneController,
               enabled: isEditing,
