@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:santa_clara/pages/offer_ride.dart';
 import 'package:santa_clara/pages/search_page.dart';
+import '../chat/chat_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -97,6 +98,16 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
+
+ElevatedButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ChatPage()),
+    );
+  },
+  child: const Text("Open Chat"),
+),
 
             // Carpool listing
             // Padding(
