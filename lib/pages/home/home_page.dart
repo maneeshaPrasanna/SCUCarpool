@@ -1,6 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:santa_clara/models/ride.dart';
+import 'package:santa_clara/navigation/my_routes.dart';
 import 'package:santa_clara/pages/offer_ride.dart';
+import 'package:santa_clara/pages/ride_details.dart';
 import 'package:santa_clara/pages/search_page.dart';
+import 'package:santa_clara/ride/cubit/ride_cubit.dart';
+import 'package:santa_clara/widgets/main_drawer.dart';
+import 'package:santa_clara/widgets/ride_card.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,16 +18,18 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: const Color(0xFF811E2D), // Maroon color
-
-        title: const Text('Carpool App'),
+        iconTheme: const IconThemeData(color: Colors.white), // White icons
+        title: const Text('Home'),
         elevation: 2,
         titleTextStyle: const TextStyle(
-          fontSize: 18,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
       ),
+      drawer: const MainDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -30,29 +41,32 @@ class HomePage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF811E2D),
+                      ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PlanYourRidePage()),
-                        );
+                        context.pushNamed(MyRoutes.planYourRide.name);
                       },
-                      child: const Text('Find a Ride'),
+                      child: const Text(
+                        'Find a Ride',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const OfferRidePage()),
-                        );
-                      },
-                      child: const Text('Offer a Ride'),
+                      child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF811E2D),
                     ),
-                  ),
+                    onPressed: () {
+                      context.pushNamed(MyRoutes.offerRide.name);
+                    },
+                    child: const Text(
+                      'Offer a Ride',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  )),
                 ],
               ),
             ),
@@ -62,10 +76,7 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PlanYourRidePage()),
-                  );
+                  context.pushNamed(MyRoutes.planYourRide.name);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
@@ -98,48 +109,54 @@ class HomePage extends StatelessWidget {
               ),
             ),
 
-            // Carpool listing
-            // Padding(
-            //   padding: const EdgeInsets.all(16.0),
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       border: Border.all(color: Colors.grey.shade300),
-            //       borderRadius: BorderRadius.circular(8.0),
-            //     ),
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(16.0),
-            //       child: Column(
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           const Text(
-            //             'Driver_name',
-            //             style: TextStyle(fontWeight: FontWeight.bold),
-            //           ),
-            //           const SizedBox(height: 8),
-            //           const Text('Sunnyvale'),
-            //           const SizedBox(height: 4),
-            //           const Text('SCU'),
-            //           const SizedBox(height: 4),
-            //           const Text('3 seats available'),
-            //           const SizedBox(height: 4),
-            //           const Text('05/05/2025 5pm'),
-            //           const SizedBox(height: 4),
-            //           const Text('pick-up location is Sunnyvale transit center, waiting for 10 min'),
-            //           const SizedBox(height: 16),
-            //           Align(
-            //             alignment: Alignment.centerRight,
-            //             child: ElevatedButton(
-            //               onPressed: () {
-            //                 // Handle join action
-            //               },
-            //               child: const Text('Join'),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('rides')
+                  .orderBy('departureTime')
+                  .limit(10)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.all(32.0),
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text('No available rides at the moment.'),
+                  );
+                }
+
+                final rides = snapshot.data!.docs.map((doc) {
+                  print('Joining ride: ${doc.id}');
+                  return Ride.fromMap(doc.id, doc.data());
+                }).toList();
+                return ListView.builder(
+                  shrinkWrap: true, // Important for use inside a ScrollView
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Prevents nested scrolling
+                  itemCount: rides.length,
+                  itemBuilder: (context, index) {
+                    final ride = rides[index];
+                    return RideCard(
+                      ride: ride,
+                      onJoin: () {
+                        print('Joining ride: ${ride.id}');
+                        context.read<RideCubit>().selectRide(ride);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => RideDetailsScreen(ride: ride),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),

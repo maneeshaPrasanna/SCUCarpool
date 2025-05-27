@@ -66,7 +66,8 @@ class User {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  //String toJson() => json.encode(toMap());
+  Map<String, dynamic> toJson() => toMap();
 
   factory User.fromJson(String source) =>
       User.fromMap(json.decode(source) as Map<String, dynamic>);

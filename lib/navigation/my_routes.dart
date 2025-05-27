@@ -12,6 +12,12 @@ class MyRoutes {
   static MyRoute signIn = MyRoute(name: 'signIn', path: '/signIn');
   static MyRoute verifyEmail =
       MyRoute(name: 'verifyEmail', path: '/verifyEmail');
+  static MyRoute offerRide = MyRoute(name: 'offerRide', path: '/offerRide');
+  static MyRoute planYourRide =
+      MyRoute(name: 'planYourRide', path: '/planYourRide');
+  static MyRoute rideScreen = MyRoute(name: 'rideScreen', path: '/rideScreen');
+  static MyRoute rideDetails =
+      MyRoute(name: 'rideDetails', path: '/rideDetails');
 }
 
 class IndexedRoutes {

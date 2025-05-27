@@ -64,7 +64,7 @@ class _UserProfilePageState extends State<ProfilePage> {
 
   Future<void> _saveProfile() async {
     if (user == null) return;
-
+    final currentUser = FirebaseAuth.instance.currentUser;
     String newAvatarUrl = avatarUrl;
     if (_newAvatarFile != null) {
       newAvatarUrl = await _uploadAvatar(_newAvatarFile!) ?? avatarUrl;
@@ -75,6 +75,11 @@ class _UserProfilePageState extends State<ProfilePage> {
       'phoneNumber': phoneController.text.trim(),
       'avatarUrl': newAvatarUrl,
     });
+    await currentUser?.updateDisplayName(nameController.text.trim());
+    await currentUser?.updatePhotoURL('xyz');
+
+    // Optional: Reload the user to get updated values
+    await currentUser?.reload();
 
     setState(() {
       isEditing = false;
@@ -143,7 +148,7 @@ class _UserProfilePageState extends State<ProfilePage> {
                   ? _saveProfile
                   : () => setState(() => isEditing = true),
               style: ElevatedButton.styleFrom(
-                 backgroundColor: const Color.fromARGB(255, 129, 30, 45),
+                backgroundColor: const Color.fromARGB(255, 129, 30, 45),
                 foregroundColor: Colors.white, // ✅ 设置字体颜色
               ),
               child: Text(isEditing ? 'Save' : 'Edit Profile'),

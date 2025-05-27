@@ -30,6 +30,12 @@ class RideCubit extends Cubit<RideState> {
     }
   }
 
+  Future<void> loadRides() async {
+    if (_pickup != null && _destination != null) {
+      await fetchRides(_pickup!, _destination!);
+    }
+  }
+
   Future<void> fetchRides(
       LocationModel pickup, LocationModel destination) async {
     emit(RideLoading());
@@ -69,5 +75,11 @@ class RideCubit extends Cubit<RideState> {
     } catch (e) {
       emit(RideError('Failed to join ride: $e'));
     }
+  }
+
+  void clearRideSearchState() {
+    _pickup = null;
+    _destination = null;
+    emit(RideInitial());
   }
 }

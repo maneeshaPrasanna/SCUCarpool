@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:santa_clara/constant/constant.dart';
+import 'package:santa_clara/navigation/my_routes.dart';
 import 'package:santa_clara/pages/ride_details.dart';
 import 'package:santa_clara/ride/cubit/ride_cubit.dart';
 import 'package:santa_clara/ride/cubit/ride_state.dart';
@@ -18,7 +20,8 @@ class RideScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Or handle custom logic
+            // Navigator.pop(context); // Or handle custom logic
+            context.pop();
           },
         ),
         title: const Text("Available Rides"),
@@ -47,11 +50,21 @@ class RideScreen extends StatelessWidget {
                     // Implement join ride logic
                     context.read<RideCubit>().selectRide(ride);
                     // 2) navigate to details, passing ride
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => RideDetailsScreen(ride: ride),
-                      ),
-                    );
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (_) => RideDetailsScreen(ride: ride),
+                    //   ),
+
+                    final location = GoRouterState.of(context).uri.toString();
+                    print('➡️ Current location: $location');
+
+                    context.pushNamed(MyRoutes.rideDetails.name,
+                        extra: ride // Pass the ride object )
+                        );
+                    // if (context.mounted) {
+                    //   print('peopleijnngg');
+                    //   context.read<RideCubit>().loadRides();
+                    // }
                   },
                 );
               },

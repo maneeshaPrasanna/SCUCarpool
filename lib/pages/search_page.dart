@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:santa_clara/navigation/my_routes.dart';
 import 'package:santa_clara/pages/ride_screen.dart';
 import 'package:santa_clara/pages/sample_rides.dart';
 import 'package:santa_clara/pages/update.dart';
@@ -8,10 +10,22 @@ import 'package:santa_clara/ride/cubit/ride_state.dart';
 import 'package:santa_clara/widgets/pickup_where_to_card.dart';
 //import 'package:santa_clara/widgets/pickup_where_to_card.dart';
 
-class PlanYourRidePage extends StatelessWidget {
-  Color maroon = const Color(0xFF811E2D);
+class PlanYourRidePage extends StatefulWidget {
+  const PlanYourRidePage({super.key}); // Maroon color
+  @override
+  State<PlanYourRidePage> createState() => _PlanYourRidePageState();
+}
 
-  PlanYourRidePage({super.key}); // Maroon color
+class _PlanYourRidePageState extends State<PlanYourRidePage> {
+  Color maroon = const Color(0xFF811E2D); // Maroon color
+  @override
+  void initState() {
+    super.initState();
+    // Clear any previous search state when this page is loaded
+    Future.delayed(Duration.zero, () {
+      context.read<RideCubit>().clearRideSearchState();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +36,7 @@ class PlanYourRidePage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Or handle custom logic
+            //Navigator.pop(context); // Or handle custom logic
           },
         ),
         title: const Text("Plan Your Ride"),
@@ -36,11 +50,15 @@ class PlanYourRidePage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: BlocListener<RideCubit, RideState>(
+          listenWhen: (previous, current) =>
+              previous.runtimeType != current.runtimeType,
           listener: (context, state) {
             if (state is RideLoaded) {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const RideScreen()),
-              );
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(builder: (_) => const RideScreen()),
+              // );
+              context.pushNamed(MyRoutes.rideScreen.name);
+              //context.read<RideCubit>().clearRideSearchState();
             }
             if (state is RideError) {
               ScaffoldMessenger.of(context)

@@ -80,7 +80,10 @@ class Ride {
       id: id,
       pickupLocation: LocationModel.fromMap(map['pickupLocation']),
       destinationLocation: LocationModel.fromMap(map['destinationLocation']),
-      departureTime: (map['departureTime'] as Timestamp).toDate(),
+      //departureTime: (map['departureTime'] as Timestamp).toDate(),
+      departureTime: map['departureTime'] is Timestamp
+          ? (map['departureTime'] as Timestamp).toDate()
+          : DateTime.parse(map['departureTime']),
       seatsAvailable: map['seatsAvailable'],
       driver: Driver.fromMap(map['driver']),
       description: map['description'],

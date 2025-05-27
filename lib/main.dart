@@ -72,6 +72,7 @@ class MyApp extends StatelessWidget {
         createTextTheme(context, "Roboto", "Playfair Display");
 
     MaterialTheme theme = MaterialTheme(textTheme);
+
     return RepositoryProvider(
       create: (context) {
         return AuthenticationRepository();

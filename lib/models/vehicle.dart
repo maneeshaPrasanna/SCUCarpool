@@ -46,7 +46,8 @@ class Vehicle {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  //String toJson() => json.encode(toMap());
+  Map<String, dynamic> toJson() => toMap();
 
   factory Vehicle.fromJson(String source) =>
       Vehicle.fromMap(json.decode(source) as Map<String, dynamic>);

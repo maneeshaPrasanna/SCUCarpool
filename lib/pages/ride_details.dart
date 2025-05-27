@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:santa_clara/models/ride.dart';
 import 'package:santa_clara/ride_details/cubit/ride_details_cubit.dart';
@@ -47,9 +48,11 @@ class _RideDetailsContentState extends State<_RideDetailsContent> {
         backgroundColor: const Color(0xFF811E2D),
         title: const Text('Ride Details'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.pop();
+            } //=> Navigator.of(context).pop(),
+            ),
         titleTextStyle: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,

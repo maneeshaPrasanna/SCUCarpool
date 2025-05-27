@@ -19,11 +19,27 @@ class OfferRideCubit extends Cubit<OfferRideState> {
     required int seatsAvailable,
     required String description,
     required User user,
-    required Vehicle vehicle,
   }) async {
     emit(OfferRideLoading());
 
     try {
+      print('Offering ride with the following details:');
+      final vehicleDoc =
+          await _firestore.collection('cars').doc(user.uid).get();
+
+      if (!vehicleDoc.exists) {
+        emit(OfferRideError('No vehicle found for user.'));
+        return;
+      }
+
+      final vehicle = Vehicle.fromMap(vehicleDoc.data()!);
+
+      // print('Driver object: ${driver.toJson()}');
+      print('User object: ${user.toJson()}');
+      print('Vehicle object: ${vehicle.toJson()}');
+      print('Pickup Location object: ${pickupLocation.toJson()}');
+      print('Destination Location object: ${destinationLocation.toJson()}');
+      //print('Document Reference: ${docRef.id}');
       final docRef = _firestore.collection('rides').doc();
 
       final driver = Driver(
@@ -31,6 +47,13 @@ class OfferRideCubit extends Cubit<OfferRideState> {
         rating: 4.8, // You can make this configurable later
         vehicle: vehicle,
       );
+      //print('Ride object: ${ride.toJson()}');
+      print('Driver object: ${driver.toJson()}');
+      print('User object: ${user.toJson()}');
+      print('Vehicle object: ${vehicle.toJson()}');
+      print('Pickup Location object: ${pickupLocation.toJson()}');
+      print('Destination Location object: ${destinationLocation.toJson()}');
+      print('Document Reference: ${docRef.id}');
 
       final ride = Ride(
         id: docRef.id,
@@ -42,7 +65,15 @@ class OfferRideCubit extends Cubit<OfferRideState> {
         driver: driver,
       );
 
+      print('Ride object: ${ride.toJson()}');
+      print('Driver object: ${driver.toJson()}');
+      print('User object: ${user.toJson()}');
+      print('Vehicle object: ${vehicle.toJson()}');
+      print('Pickup Location object: ${pickupLocation.toJson()}');
+      print('Destination Location object: ${destinationLocation.toJson()}');
+      print('Document Reference: ${docRef.id}');
       await docRef.set(ride.toJson());
+
       emit(OfferRideSuccess());
     } catch (e) {
       emit(OfferRideError('Failed to offer ride: $e'));

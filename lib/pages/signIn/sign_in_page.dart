@@ -3,6 +3,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
 import 'package:santa_clara/models/user.dart' as modelUser;
 
 import 'package:santa_clara/pages/signIn/sign_in_header.dart';
@@ -45,6 +46,9 @@ class SignInPage extends StatelessWidget {
     );
 
     Provider.of<UserProvider>(context, listen: false).setUser(userModel!);
+    context.read<AuthenticationBloc>().add(
+          AuthenticationSignedInEvent(),
+        );
   }
 
   @override

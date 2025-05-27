@@ -16,6 +16,12 @@ class RideCard extends StatelessWidget {
     final pickup = ride.pickupLocation;
     final destination = ride.destinationLocation;
     final driver = ride.driver;
+    if (pickup.coordinates.latitude == null ||
+        pickup.coordinates.longitude == null ||
+        destination.coordinates.latitude == null ||
+        destination.coordinates.longitude == null) {
+      return const SizedBox(); // or show fallback UI
+    }
 
     final mapUrl = 'https://maps.googleapis.com/maps/api/staticmap?size=600x300'
         '&markers=color:blue%7Clabel:P%7C${pickup.coordinates.latitude},${pickup.coordinates.longitude}'
