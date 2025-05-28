@@ -50,7 +50,10 @@ class _RideDetailsContentState extends State<_RideDetailsContent> {
         leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              context.pop();
+              //context.pop();
+              if (mounted) {
+                Navigator.pop(context, true);
+              }
             } //=> Navigator.of(context).pop(),
             ),
         titleTextStyle: const TextStyle(

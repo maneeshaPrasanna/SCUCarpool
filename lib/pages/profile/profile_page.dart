@@ -80,7 +80,18 @@ class _UserProfilePageState extends State<ProfilePage> {
 
     // Optional: Reload the user to get updated values
     await currentUser?.reload();
+    final rideSnapshot = await FirebaseFirestore.instance
+        .collection('rides')
+        .where('driver.user.uid', isEqualTo: user!.uid)
+        .get();
 
+    for (var doc in rideSnapshot.docs) {
+      await doc.reference.update({
+        'driver.user.name': nameController.text.trim(),
+        'driver.user.phoneNumber': phoneController.text.trim(),
+        'driver.user.imageUrl': 'xyz',
+      });
+    }
     setState(() {
       isEditing = false;
       avatarUrl = newAvatarUrl;

@@ -61,9 +61,9 @@ class ScaffoldWithNavBar extends StatelessWidget {
     final String routeName = IndexedRoutes().getName(index);
 
     // If navigating to Home, clear RideCubit state
-    if (routeName == MyRoutes.home.name) {
-      context.read<RideCubit>().clearRideSearchState();
-    }
+    // if (routeName == MyRoutes.home.name) {
+    //   context.read<RideCubit>().clearRideSearchState();
+    // }
     GoRouter.of(context).goNamed(IndexedRoutes().getName(index));
   }
 }

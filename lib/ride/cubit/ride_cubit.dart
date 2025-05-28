@@ -41,17 +41,29 @@ class RideCubit extends Cubit<RideState> {
     emit(RideLoading());
     print('ohkkkll!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     try {
+      final now = DateTime.now().toIso8601String();
       final querySnapshot = await firestore
           .collection('rides')
           .where('pickupLocation.address', isEqualTo: pickup.address)
           .where('destinationLocation.address', isEqualTo: destination.address)
+          .where('departureTime', isGreaterThan: now)
           .get();
 
       final rides = querySnapshot.docs.map((doc) {
         final data = doc.data();
+
         return Ride.fromMap(
             doc.id, data); // assuming fromMap accepts Map and docId
       }).toList();
+      //    final rides = querySnapshot.docs.map((doc) {
+      //   final data = doc.data();
+      //   return Ride.fromMap(doc.id, data);
+      // }).where((ride) {
+      //   // Parse the string to DateTime and filter
+      //   final departureTimeString = ride.departureTime;
+      //   final departure = DateTime.parse(departureTimeString);
+      //   return departure != null && departure.isAfter(now);
+      // }).toList();
 
       emit(RideLoaded(rides));
     } catch (e) {

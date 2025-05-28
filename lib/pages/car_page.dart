@@ -57,6 +57,41 @@ class _AddCarPageState extends State<CarPage> {
       'plate': _plateController.text.trim(),
     });
 
+    // 2. Fetch rides with departureTime > now
+    // final now = DateTime.now();
+    // final rideSnapshot = await FirebaseFirestore.instance
+    //     .collection('rides')
+    //     .where('departureTime', isGreaterThan: Timestamp.fromDate(now))
+    //     .get();
+    // print('Found ${rideSnapshot.docs.length} rides with departureTime > now');
+    // // 3. Filter rides where driver.user.uid == current user
+    // for (var doc in rideSnapshot.docs) {
+    final now = DateTime.now();
+    final rideCollection = FirebaseFirestore.instance.collection('rides');
+
+    final querySnapshot = await rideCollection.get();
+    print('founddd ${querySnapshot.docs.length}');
+    for (final doc in querySnapshot.docs) {
+      final data = doc.data();
+      final departureTimeString = data['departureTime'];
+      print('departureTimeString: $departureTimeString');
+      if (departureTimeString is String) {}
+      final departureTime = DateTime.parse(departureTimeString);
+      print('departureTime: $departureTime');
+      print('now: $now');
+      if (departureTime.isAfter(now)) {
+        print(data['driver']?['user']?['uid']);
+        if (data['driver']?['user']?['uid'] == user!.uid) {
+          await doc.reference.update({
+            'driver.vehicle.maker': _makerController.text.trim(),
+            'driver.vehicle.model': _modelController.text.trim(),
+            'driver.vehicle.carColor': _carColorController.text.trim(),
+            'driver.vehicle.plate': _plateController.text.trim(),
+          });
+        }
+      }
+    }
+
     if (mounted) {
       Navigator.pop(context, true); // 返回上一页
     }

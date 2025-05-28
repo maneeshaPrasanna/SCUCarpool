@@ -112,6 +112,8 @@ class HomePage extends StatelessWidget {
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('rides')
+                  .where('departureTime',
+                      isGreaterThan: DateTime.now().toIso8601String())
                   .orderBy('departureTime')
                   .limit(10)
                   .snapshots(),

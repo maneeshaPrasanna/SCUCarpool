@@ -50,17 +50,16 @@ class RideScreen extends StatelessWidget {
                     // Implement join ride logic
                     context.read<RideCubit>().selectRide(ride);
                     // 2) navigate to details, passing ride
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (_) => RideDetailsScreen(ride: ride),
-                    //   ),
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => RideDetailsScreen(ride: ride),
+                    ));
 
-                    final location = GoRouterState.of(context).uri.toString();
-                    print('➡️ Current location: $location');
+                    // final location = GoRouterState.of(context).uri.toString();
+                    // print('➡️ Current location: $location');
 
-                    context.pushNamed(MyRoutes.rideDetails.name,
-                        extra: ride // Pass the ride object )
-                        );
+                    // context.pushNamed(MyRoutes.rideDetails.name,
+                    //     extra: ride // Pass the ride object )
+                    //     );
                     // if (context.mounted) {
                     //   print('peopleijnngg');
                     //   context.read<RideCubit>().loadRides();
