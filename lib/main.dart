@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:santa_clara/utilities/route_observer.dart';
 
 import 'blocs/authentication/bloc/authentication_bloc.dart';
 import 'firebase_options.dart';

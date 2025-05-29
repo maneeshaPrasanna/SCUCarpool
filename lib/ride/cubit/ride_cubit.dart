@@ -47,6 +47,7 @@ class RideCubit extends Cubit<RideState> {
           .where('pickupLocation.address', isEqualTo: pickup.address)
           .where('destinationLocation.address', isEqualTo: destination.address)
           .where('departureTime', isGreaterThan: now)
+          .orderBy('createdAt', descending: true)
           .get();
 
       final rides = querySnapshot.docs.map((doc) {
@@ -55,15 +56,6 @@ class RideCubit extends Cubit<RideState> {
         return Ride.fromMap(
             doc.id, data); // assuming fromMap accepts Map and docId
       }).toList();
-      //    final rides = querySnapshot.docs.map((doc) {
-      //   final data = doc.data();
-      //   return Ride.fromMap(doc.id, data);
-      // }).where((ride) {
-      //   // Parse the string to DateTime and filter
-      //   final departureTimeString = ride.departureTime;
-      //   final departure = DateTime.parse(departureTimeString);
-      //   return departure != null && departure.isAfter(now);
-      // }).toList();
 
       emit(RideLoaded(rides));
     } catch (e) {
@@ -86,6 +78,33 @@ class RideCubit extends Cubit<RideState> {
       emit(RideJoined(rideId));
     } catch (e) {
       emit(RideError('Failed to join ride: $e'));
+    }
+  }
+
+  Future<void> loadMyRidesSplit(String userId) async {
+    emit(RideLoading());
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('rides')
+          .where('driver.user.uid', isEqualTo: userId)
+          .get();
+
+      final now = DateTime.now();
+      final allRides = querySnapshot.docs
+          .map((doc) => Ride.fromMap(doc.id, doc.data()))
+          .toList();
+
+      final upcoming = allRides
+          .where((r) => r.departureTime.isAfter(now))
+          .toList()
+        ..sort((a, b) => (b.createdAt ?? DateTime(1970))
+            .compareTo(a.createdAt ?? DateTime(1970)));
+      final past =
+          allRides.where((r) => r.departureTime.isBefore(now)).toList();
+
+      emit(RideSplitLoaded(upcoming: upcoming, past: past));
+    } catch (e) {
+      emit(RideError('Failed to load rides: $e'));
     }
   }
 

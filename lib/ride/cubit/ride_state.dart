@@ -47,3 +47,10 @@ class RideError extends RideState {
   @override
   List<Object> get props => [message];
 }
+
+class RideSplitLoaded extends RideState {
+  final List<Ride> upcoming;
+  final List<Ride> past;
+
+  const RideSplitLoaded({required this.upcoming, required this.past});
+}

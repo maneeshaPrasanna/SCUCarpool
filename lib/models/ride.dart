@@ -1,45 +1,3 @@
-// import 'package:santa_clara/model/driver.dart';
-// import 'package:santa_clara/model/location.dart';
-
-// class Ride {
-//   final LocationModel pickupLocation;
-//   final LocationModel destinationLocation;
-//   final Driver driver;
-//   final int seatsAvailable;
-//   final DateTime dateTime;
-//   final String note;
-
-//   Ride({
-//     required this.pickupLocation,
-//     required this.destinationLocation,
-//     required this.driver,
-//     required this.seatsAvailable,
-//     required this.dateTime,
-//     required this.note,
-//   });
-
-//   Map<String, dynamic> toMap() {
-//     return {
-//       'pickupLocation': pickupLocation.toMap(),
-//       'destinationLocation': destinationLocation.toMap(),
-//       'driver': driver.toMap(),
-//       'seatsAvailable': seatsAvailable,
-//       'dateTime': dateTime.toIso8601String(),
-//       'note': note,
-//     };
-//   }
-
-//   factory Ride.fromMap(Map<String, dynamic> map) {
-//     return Ride(
-//       pickupLocation: LocationModel.fromMap(map['pickupLocation']),
-//       destinationLocation: LocationModel.fromMap(map['destinationLocation']),
-//       driver: Driver.fromMap(map['driver']),
-//       seatsAvailable: map['seatsAvailable'],
-//       dateTime: DateTime.parse(map['dateTime']),
-//       note: map['note'],
-//     );
-//   }
-// }
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:santa_clara/models/driver.dart';
@@ -53,6 +11,7 @@ class Ride {
   final int seatsAvailable;
   final Driver driver;
   final String description;
+  final DateTime? createdAt;
 
   Ride({
     required this.id,
@@ -62,9 +21,10 @@ class Ride {
     required this.seatsAvailable,
     required this.driver,
     required this.description,
+    this.createdAt,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool includeServerTimestamp = false}) {
     return {
       'pickupLocation': pickupLocation.toMap(),
       'destinationLocation': destinationLocation.toMap(),
@@ -72,6 +32,7 @@ class Ride {
       'seatsAvailable': seatsAvailable,
       'driver': driver.toMap(),
       'description': description,
+      if (includeServerTimestamp) 'createdAt': FieldValue.serverTimestamp(),
     };
   }
 
@@ -80,13 +41,17 @@ class Ride {
       id: id,
       pickupLocation: LocationModel.fromMap(map['pickupLocation']),
       destinationLocation: LocationModel.fromMap(map['destinationLocation']),
-      //departureTime: (map['departureTime'] as Timestamp).toDate(),
       departureTime: map['departureTime'] is Timestamp
           ? (map['departureTime'] as Timestamp).toDate()
           : DateTime.parse(map['departureTime']),
       seatsAvailable: map['seatsAvailable'],
       driver: Driver.fromMap(map['driver']),
       description: map['description'],
+      createdAt: map['createdAt'] is Timestamp
+          ? (map['createdAt'] as Timestamp).toDate()
+          : map['createdAt'] != null
+              ? DateTime.tryParse(map['createdAt'])
+              : null,
     );
   }
 
@@ -99,6 +64,7 @@ class Ride {
       'seatsAvailable': seatsAvailable,
       'description': description,
       'driver': driver.toJson(),
+      'createdAt': createdAt?.toIso8601String(),
     };
   }
 }

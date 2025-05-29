@@ -63,6 +63,7 @@ class OfferRideCubit extends Cubit<OfferRideState> {
         seatsAvailable: seatsAvailable,
         description: description,
         driver: driver,
+        createdAt: DateTime.now(),
       );
 
       print('Ride object: ${ride.toJson()}');

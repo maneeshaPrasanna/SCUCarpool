@@ -1,5 +1,6 @@
 import 'package:santa_clara/pages/generic/generic_page.dart';
 import 'package:santa_clara/pages/home/home_page.dart';
+import 'package:santa_clara/pages/my_ride_screen.dart';
 import 'package:santa_clara/pages/offer_ride.dart';
 import 'package:santa_clara/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class IndexedRoutes {
         path: 'activity',
         label: 'Activity',
         icon: Icons.history,
-        child: const GenericPage(title: "Activity")),
+        child: const MyRideScreen()),
     MyRoute(
         name: 'settings',
         path: 'settings',

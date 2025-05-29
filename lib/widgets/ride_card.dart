@@ -117,19 +117,20 @@ class RideCard extends StatelessWidget {
                     ],
                   ),
                 const SizedBox(height: 12),
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppConstants.borderColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                if (onJoin != null)
+                  Center(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppConstants.borderColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
+                      onPressed: onJoin,
+                      child: Text('Join',
+                          style: textStyle.copyWith(color: Colors.white)),
                     ),
-                    onPressed: onJoin,
-                    child: Text('Join',
-                        style: textStyle.copyWith(color: Colors.white)),
                   ),
-                ),
               ],
             ),
           ),

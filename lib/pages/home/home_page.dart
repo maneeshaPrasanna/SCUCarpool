@@ -114,7 +114,7 @@ class HomePage extends StatelessWidget {
                   .collection('rides')
                   .where('departureTime',
                       isGreaterThan: DateTime.now().toIso8601String())
-                  .orderBy('departureTime')
+                  .orderBy('createdAt', descending: true)
                   .limit(10)
                   .snapshots(),
               builder: (context, snapshot) {
@@ -148,11 +148,12 @@ class HomePage extends StatelessWidget {
                       onJoin: () {
                         print('Joining ride: ${ride.id}');
                         context.read<RideCubit>().selectRide(ride);
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => RideDetailsScreen(ride: ride),
-                          ),
-                        );
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (_) => RideDetailsScreen(ride: ride),
+                        //   ),
+                        context.pushNamed(MyRoutes.rideDetails.name,
+                            extra: ride);
                       },
                     );
                   },

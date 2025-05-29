@@ -37,6 +37,7 @@ class _PlanYourRidePageState extends State<PlanYourRidePage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             //Navigator.pop(context); // Or handle custom logic
+            context.pop();
           },
         ),
         title: const Text("Plan Your Ride"),
@@ -75,7 +76,7 @@ class _PlanYourRidePageState extends State<PlanYourRidePage> {
               // FloatingActionButton(
               //   child: const Icon(Icons.cloud_upload),
               //   onPressed: () async {
-              //     await seedSampleRides();
+              //     await updateSanJoseAddress();
               //     print('Sample rides seeded!');
               //   },
               // )

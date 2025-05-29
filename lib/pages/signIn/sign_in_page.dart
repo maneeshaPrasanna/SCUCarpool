@@ -45,10 +45,12 @@ class SignInPage extends StatelessWidget {
       createdAt: DateTime.now(),
     );
 
-    Provider.of<UserProvider>(context, listen: false).setUser(userModel!);
-    context.read<AuthenticationBloc>().add(
-          AuthenticationSignedInEvent(),
-        );
+    //Provider.of<UserProvider>(context, listen: false).setUser(userModel!);
+    if (context.mounted) {
+      context.read<AuthenticationBloc>().add(
+            AuthenticationSignedInEvent(),
+          );
+    }
   }
 
   @override

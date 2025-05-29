@@ -2,14 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:santa_clara/constant/constant.dart';
+import 'package:santa_clara/models/ride.dart';
 import 'package:santa_clara/navigation/my_routes.dart';
 import 'package:santa_clara/pages/ride_details.dart';
 import 'package:santa_clara/ride/cubit/ride_cubit.dart';
 import 'package:santa_clara/ride/cubit/ride_state.dart';
 import 'package:santa_clara/widgets/ride_card.dart';
 
-class RideScreen extends StatelessWidget {
+class RideScreen extends StatefulWidget {
   const RideScreen({super.key});
+
+  @override
+  State<RideScreen> createState() => _RideScreenState();
+}
+
+class _RideScreenState extends State<RideScreen> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+    // Load when screen is first created
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Optional: Reload rides when app resumes
+    if (state == AppLifecycleState.resumed) {
+      context.read<RideCubit>().loadRides();
+    }
+  }
+
+  Future<void> _navigateToDetails(Ride ride) async {
+    context.read<RideCubit>().selectRide(ride);
+
+    final result =
+        await context.pushNamed(MyRoutes.rideDetails.name, extra: ride);
+
+    if (result == true && mounted) {
+      context.read<RideCubit>().loadRides(); // Reload after return
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +59,6 @@ class RideScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Navigator.pop(context); // Or handle custom logic
             context.pop();
           },
         ),
@@ -46,25 +84,7 @@ class RideScreen extends StatelessWidget {
                 final ride = state.rides[index];
                 return RideCard(
                   ride: ride,
-                  onJoin: () {
-                    // Implement join ride logic
-                    context.read<RideCubit>().selectRide(ride);
-                    // 2) navigate to details, passing ride
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => RideDetailsScreen(ride: ride),
-                    ));
-
-                    // final location = GoRouterState.of(context).uri.toString();
-                    // print('➡️ Current location: $location');
-
-                    // context.pushNamed(MyRoutes.rideDetails.name,
-                    //     extra: ride // Pass the ride object )
-                    //     );
-                    // if (context.mounted) {
-                    //   print('peopleijnngg');
-                    //   context.read<RideCubit>().loadRides();
-                    // }
-                  },
+                  onJoin: () => _navigateToDetails(ride),
                 );
               },
             );
@@ -75,7 +95,8 @@ class RideScreen extends StatelessWidget {
             );
           } else {
             return const Center(
-                child: Text("Search for rides to get started."));
+              child: Text("Search for rides to get started."),
+            );
           }
         },
       ),
