@@ -1,4 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:santa_clara/location/location_cubit.dart';
+import 'package:santa_clara/offerRide/cubit/offer_ride_cubit.dart';
+import 'package:santa_clara/repositories/user_provider.dart';
+import 'package:santa_clara/ride/cubit/ride_cubit.dart';
 import 'package:santa_clara/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
@@ -6,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:santa_clara/utilities/route_observer.dart';
 
 import 'blocs/authentication/bloc/authentication_bloc.dart';
 import 'firebase_options.dart';
@@ -13,6 +19,7 @@ import 'navigation/router.dart';
 import 'repositories/authentication/authentication_repository.dart';
 import 'theme/cubit/theme_cubit.dart';
 import 'theme/util.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,10 +27,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),
   ]);
-  Bloc.observer = AppBlocObserver();
+  Bloc.observer = const AppBlocObserver();
   runApp(MyApp());
 }
 
@@ -65,6 +73,7 @@ class MyApp extends StatelessWidget {
         createTextTheme(context, "Roboto", "Playfair Display");
 
     MaterialTheme theme = MaterialTheme(textTheme);
+
     return RepositoryProvider(
       create: (context) {
         return AuthenticationRepository();
@@ -84,6 +93,17 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) => ThemeCubit(),
           ),
+          BlocProvider<LocationAutocompleteCubit>(
+            create: (context) => LocationAutocompleteCubit(),
+          ),
+          BlocProvider<RideCubit>(
+              create: (_) => RideCubit(firestore: FirebaseFirestore.instance)),
+          ChangeNotifierProvider(create: (_) => UserProvider()),
+
+          BlocProvider(
+              create: (_) => OfferRideCubit(FirebaseFirestore.instance)),
+
+          // Add other Cubits/Providers here
         ],
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {},

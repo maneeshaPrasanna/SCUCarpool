@@ -64,13 +64,20 @@ class AuthenticationBloc
   }
 
   void updateUser(AuthUser authUser) {
+    print("heyyyyaaa");
+
     user = User(
       email: authUser.email!,
       uid: authUser.uid!,
-      displayName: authUser.displayName ?? "",
+      name: authUser.displayName ?? "",
       imageUrl: authUser.imageUrl ?? Mock.imageUrl(),
       emailVerified: authUser.emailVerified ?? false,
+      phoneNumber:
+          "1234567890", // Placeholder, replace with actual phone number if available
+      createdAt: DateTime.now(),
     );
+
+    print("jiii ${authUser.displayName}");
     if (user!.emailVerified) {
       add(AuthenticationSignedInEvent());
     } else {

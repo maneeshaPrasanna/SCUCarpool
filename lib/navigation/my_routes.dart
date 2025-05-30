@@ -1,4 +1,8 @@
 import 'package:santa_clara/pages/generic/generic_page.dart';
+import 'package:santa_clara/pages/home/home_page.dart';
+import 'package:santa_clara/pages/my_ride_screen.dart';
+import 'package:santa_clara/pages/offer_ride.dart';
+import 'package:santa_clara/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:santa_clara/pages/settings/setting_page.dart';
@@ -9,29 +13,35 @@ class MyRoutes {
   static MyRoute signIn = MyRoute(name: 'signIn', path: '/signIn');
   static MyRoute verifyEmail =
       MyRoute(name: 'verifyEmail', path: '/verifyEmail');
+  static MyRoute offerRide = MyRoute(name: 'offerRide', path: '/offerRide');
+  static MyRoute planYourRide =
+      MyRoute(name: 'planYourRide', path: '/planYourRide');
+  static MyRoute rideScreen = MyRoute(name: 'rideScreen', path: '/rideScreen');
+  static MyRoute rideDetails =
+      MyRoute(name: 'rideDetails', path: '/rideDetails');
 }
 
 class IndexedRoutes {
   final List<MyRoute> routes = [
     MyRoute(
-        name: 'carpool',
-        path: 'carpool',
-        label: 'Home',
-        icon: Icons.home,
-        child: GenericPage(title: "Home")),  
+      name: 'carpool',
+      path: 'carpool',
+      label: 'Home',
+      icon: Icons.home,
+      child: const HomePage(),
+    ),
     MyRoute(
         name: 'activity',
         path: 'activity',
         label: 'Activity',
         icon: Icons.history,
-        child: GenericPage(title: "Activity")),
+        child: const MyRideScreen()),
     MyRoute(
         name: 'settings',
         path: 'settings',
         label: 'Settings',
         icon: Icons.settings,
-        child: SettingPage(title:"Settings")),
-
+        child: const SettingPage(title: "Settings")),
   ];
 
   int getIndex(String path) {

@@ -5,26 +5,26 @@ class Vehicle {
   final String maker;
   final String model;
   final String plate;
-  final String uid;
+  final String carColor;
 
   Vehicle({
     required this.maker,
     required this.model,
     required this.plate,
-    required this.uid,
+    required this.carColor,
   });
 
   Vehicle copyWith({
     String? maker,
     String? model,
     String? plate,
-    String? uid,
+    String? carColor,
   }) {
     return Vehicle(
       maker: maker ?? this.maker,
       model: model ?? this.model,
       plate: plate ?? this.plate,
-      uid: uid ?? this.uid,
+      carColor: carColor ?? this.carColor,
     );
   }
 
@@ -33,7 +33,7 @@ class Vehicle {
       'maker': maker,
       'model': model,
       'plate': plate,
-      'uid': uid,
+      'carColor': carColor,
     };
   }
 
@@ -42,18 +42,19 @@ class Vehicle {
       maker: map['maker'] as String,
       model: map['model'] as String,
       plate: map['plate'] as String,
-      uid: map['uid'] as String,
+      carColor: map['carColor'] as String,
     );
   }
 
-  String toJson() => json.encode(toMap());
+  //String toJson() => json.encode(toMap());
+  Map<String, dynamic> toJson() => toMap();
 
   factory Vehicle.fromJson(String source) =>
       Vehicle.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>
-      'Vehicle(maker: $maker, model: $model, plate: $plate, uid: $uid)';
+      'Vehicle(maker: $maker, model: $model, plate: $plate, carColor: $carColor)';
 
   @override
   bool operator ==(covariant Vehicle other) {
@@ -62,10 +63,10 @@ class Vehicle {
     return other.maker == maker &&
         other.model == model &&
         other.plate == plate &&
-        other.uid == Utf8Decoder;
+        other.carColor == Utf8Decoder;
   }
 
   @override
   int get hashCode =>
-      maker.hashCode ^ model.hashCode ^ plate.hashCode ^ uid.hashCode;
+      maker.hashCode ^ model.hashCode ^ plate.hashCode ^ carColor.hashCode;
 }
