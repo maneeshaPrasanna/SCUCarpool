@@ -15,7 +15,8 @@ class _AddCarPageState extends State<CarPage> {
   final _formKey = GlobalKey<FormState>();
   final _makerController = TextEditingController();
   final _modelController = TextEditingController();
-  final _plateNumberController = TextEditingController();
+  final _plateController = TextEditingController();
+  final _carColorController = TextEditingController();
 
   bool _loading = false;
 
@@ -32,7 +33,8 @@ class _AddCarPageState extends State<CarPage> {
       final data = doc.data()!;
       _makerController.text = data['maker'] ?? '';
       _modelController.text = data['model'] ?? '';
-      _plateNumberController.text = data['plateNumber'] ?? '';
+      _plateController.text = data['plate'] ?? '';
+      _carColorController.text = data['carColor'] ?? '';
     }
   }
 
@@ -46,7 +48,8 @@ class _AddCarPageState extends State<CarPage> {
       'uid': user!.uid,
       'maker': _makerController.text.trim(),
       'model': _modelController.text.trim(),
-      'plateNumber': _plateNumberController.text.trim(),
+      'plate': _plateController.text.trim(),
+      'carColor': _carColorController.text.trim(),
     });
 
    
@@ -90,9 +93,14 @@ class _AddCarPageState extends State<CarPage> {
                       validator: (value) => value == null || value.isEmpty ? 'Please enter car model' : null,
                     ),
                     TextFormField(
-                      controller: _plateNumberController,
+                      controller: _plateController,
                       decoration: const InputDecoration(labelText: 'Plate Number'),
                       validator: (value) => value == null || value.isEmpty ? 'Please enter plate number' : null,
+                    ),
+                    TextFormField(
+                      controller: _carColorController,
+                      decoration: const InputDecoration(labelText: 'Car Color'),
+                      validator: (value) => value == null || value.isEmpty ? 'Please enter car color' : null,
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(

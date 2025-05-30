@@ -76,7 +76,9 @@ class OfferRideCubit extends Cubit<OfferRideState> {
       await docRef.set(ride.toJson());
 
       emit(OfferRideSuccess());
-    } catch (e) {
+    } catch (e, stack) {
+      print('❌ Failed to offer ride: $e');
+      print('📍 Stack trace: $stack');
       emit(OfferRideError('Failed to offer ride: $e'));
     }
   }

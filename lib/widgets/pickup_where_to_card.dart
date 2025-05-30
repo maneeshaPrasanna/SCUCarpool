@@ -49,7 +49,8 @@ class _PickupWhereToCardState extends State<PickupWhereToCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return SingleChildScrollView(
+    child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
@@ -135,6 +136,7 @@ class _PickupWhereToCardState extends State<PickupWhereToCard> {
           },
         ),
       ],
+    ),
     );
   }
 }

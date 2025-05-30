@@ -42,7 +42,7 @@ class SignInPage extends StatelessWidget {
         'uid': uid,
         'maker': '',
         'model': '',
-        'plateNumber': '',
+        'plate': '',
       });
     } else {
       print('Car document already exists for uid: $uid');

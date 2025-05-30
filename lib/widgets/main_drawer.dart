@@ -25,7 +25,8 @@ class _MainDrawerState extends State<MainDrawer> {
   String avatarUrl = '';
   String maker = '';
   String model = '';
-  String plateNumber = '';
+  String plate = '';
+  String carColor = '';
 
   @override
   void initState() {
@@ -54,7 +55,8 @@ class _MainDrawerState extends State<MainDrawer> {
       carData = data;
       maker = data['maker'] ?? '';
       model = data['model'] ?? '';
-      plateNumber = data['plateNumber'] ?? '';
+      plate = data['plate'] ?? '';
+      carColor = data['carColor'] ?? '';
     });
       
     
@@ -76,7 +78,7 @@ class _MainDrawerState extends State<MainDrawer> {
               ),
               const SizedBox(height: 16),
         
-              // ✅ 合并后的信息卡片
+              
               Card(
                 elevation: 0,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -97,7 +99,9 @@ class _MainDrawerState extends State<MainDrawer> {
                         const SizedBox(height: 10),
                         _buildInfoRow(label: 'Model', value: model),
                         const SizedBox(height: 10),
-                        _buildInfoRow(label: 'Plate No.', value: plateNumber),
+                        _buildInfoRow(label: 'Plate', value: plate),
+                        const SizedBox(height: 10),
+                        _buildInfoRow(label: 'Car Color', value: carColor),
                         
                       ],
                     ],
@@ -105,7 +109,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 ),
               ),
 
-              // ✅ 编辑个人信息
+              
               TextButton.icon(
                 icon: const Icon(Icons.edit),
                 label: const Text("Edit Profile"),
@@ -114,12 +118,12 @@ class _MainDrawerState extends State<MainDrawer> {
                     MaterialPageRoute(builder: (_) => const ProfilePage()),
                   );
                   if (result == true) {
-                    await _loadUserData(); // 重新加载用户信息
+                    await _loadUserData(); 
                   }
                 },
               ),  
 
-              // ✅ 添加/编辑车辆信息
+              // 
               TextButton.icon(
                 icon: const Icon(Icons.emoji_transportation),
                 label: Text(carData == null ? "Add a Car" : "Edit Car Info"),
@@ -129,7 +133,7 @@ class _MainDrawerState extends State<MainDrawer> {
                   );
                   if (result == true) {
                     setState(() => carData = null);
-                    await _loadCarData(); // 重新加载车辆信息
+                    await _loadCarData(); 
                   }
                 },
               ),
