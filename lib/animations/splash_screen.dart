@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../pages/signIn/sign_in_page.dart';
+import 'package:go_router/go_router.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -43,23 +44,15 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     // Delay before transitioning to home screen with a fade
-    Future.delayed(const Duration(milliseconds: 2300), () {
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 600),
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                const SignInPage(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-          ),
-        );
-      }
-    });
+Future.microtask(() {
+  Future.delayed(const Duration(milliseconds: 2300), () {
+    if (mounted) {
+      context.go('/signIn');
+    }
+  });
+});
+
+
   }
 
   @override

@@ -14,12 +14,13 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'blocs/authentication/bloc/authentication_bloc.dart';
 import 'firebase_options.dart';
-import 'navigation/router.dart';
 import 'repositories/authentication/authentication_repository.dart';
 import 'theme/cubit/theme_cubit.dart';
 import 'theme/util.dart';
 import 'package:provider/provider.dart';
 import 'package:santa_clara/animations/splash_screen.dart';
+import 'navigation/router.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -109,7 +110,7 @@ class MyApp extends StatelessWidget {
           listener: (context, state) {},
           child: BlocBuilder<ThemeCubit, ThemeState>(
             builder: (context, state) {
-           return MaterialApp(
+return MaterialApp.router(
   debugShowCheckedModeBanner: false,
   title: 'Santa Clara',
   theme: theme.light(),
@@ -117,8 +118,9 @@ class MyApp extends StatelessWidget {
   highContrastTheme: theme.lightHighContrast(),
   highContrastDarkTheme: theme.darkHighContrast(),
   themeMode: state.themeMode,
-  home: const SplashScreen(), // ✅ This shows your animated splash first
+  routerConfig: router(authenticationBloc),
 );
+
 
             },
           ),
