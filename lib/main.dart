@@ -19,6 +19,7 @@ import 'repositories/authentication/authentication_repository.dart';
 import 'theme/cubit/theme_cubit.dart';
 import 'theme/util.dart';
 import 'package:provider/provider.dart';
+import 'package:santa_clara/animations/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -108,16 +109,17 @@ class MyApp extends StatelessWidget {
           listener: (context, state) {},
           child: BlocBuilder<ThemeCubit, ThemeState>(
             builder: (context, state) {
-              return MaterialApp.router(
-                debugShowCheckedModeBanner: false,
-                title: 'Santa Clara',
-                theme: theme.light(),
-                darkTheme: theme.dark(),
-                highContrastTheme: theme.lightHighContrast(),
-                highContrastDarkTheme: theme.darkHighContrast(),
-                themeMode: state.themeMode,
-                routerConfig: router(authenticationBloc),
-              );
+           return MaterialApp(
+  debugShowCheckedModeBanner: false,
+  title: 'Santa Clara',
+  theme: theme.light(),
+  darkTheme: theme.dark(),
+  highContrastTheme: theme.lightHighContrast(),
+  highContrastDarkTheme: theme.darkHighContrast(),
+  themeMode: state.themeMode,
+  home: const SplashScreen(), // ✅ This shows your animated splash first
+);
+
             },
           ),
         ),
