@@ -8,20 +8,20 @@ import 'package:santa_clara/pages/update.dart';
 import 'package:santa_clara/ride/cubit/ride_cubit.dart';
 import 'package:santa_clara/ride/cubit/ride_state.dart';
 import 'package:santa_clara/widgets/pickup_where_to_card.dart';
-//import 'package:santa_clara/widgets/pickup_where_to_card.dart';
 
 class PlanYourRidePage extends StatefulWidget {
-  const PlanYourRidePage({super.key}); // Maroon color
+  const PlanYourRidePage({super.key});
+
   @override
   State<PlanYourRidePage> createState() => _PlanYourRidePageState();
 }
 
 class _PlanYourRidePageState extends State<PlanYourRidePage> {
   Color maroon = const Color(0xFF811E2D); // Maroon color
+
   @override
   void initState() {
     super.initState();
-    // Clear any previous search state when this page is loaded
     Future.delayed(Duration.zero, () {
       context.read<RideCubit>().clearRideSearchState();
     });
@@ -30,15 +30,13 @@ class _PlanYourRidePageState extends State<PlanYourRidePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: maroon,
         elevation: 2,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            //Navigator.pop(context); // Or handle custom logic
-            context.pop();
-          },
+          onPressed: () => context.pop(),
         ),
         title: const Text("Plan Your Ride"),
         titleTextStyle: const TextStyle(
@@ -49,39 +47,26 @@ class _PlanYourRidePageState extends State<PlanYourRidePage> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: BlocListener<RideCubit, RideState>(
-          listenWhen: (previous, current) =>
-              previous.runtimeType != current.runtimeType,
-          listener: (context, state) {
-            if (state is RideLoaded) {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(builder: (_) => const RideScreen()),
-              // );
-              context.pushNamed(MyRoutes.rideScreen.name);
-              //context.read<RideCubit>().clearRideSearchState();
-            }
-            if (state is RideError) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.message)));
-            }
-          },
-          child: const Column(
-            children: [
-              // Input card
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: PickupWhereToCard(),
-              ),
-              // FloatingActionButton(
-              //   child: const Icon(Icons.cloud_upload),
-              //   onPressed: () async {
-              //     await updateSanJoseAddress();
-              //     print('Sample rides seeded!');
-              //   },
-              // )
-            ],
+      body: BlocListener<RideCubit, RideState>(
+        listenWhen: (previous, current) =>
+            previous.runtimeType != current.runtimeType,
+        listener: (context, state) {
+          if (state is RideLoaded) {
+            context.pushNamed(MyRoutes.rideScreen.name);
+          }
+          if (state is RideError) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+            top: 16,
           ),
+          child: const PickupWhereToCard(),
         ),
       ),
     );

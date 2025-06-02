@@ -29,7 +29,11 @@ class RideCard extends StatelessWidget {
         '&path=color:0x0000ff|weight:5|${pickup.coordinates.latitude},${pickup.coordinates.longitude}|${destination.coordinates.latitude},${destination.coordinates.longitude}'
         '&key=${AppConstants.kGoogleApiKey}';
 
-    const textStyle = TextStyle(color: AppConstants.borderColor);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final iconColor = isDark ? Colors.white : AppConstants.borderColor;
+    final textStyle = TextStyle(
+      color: isDark ? Colors.white : AppConstants.borderColor,
+    );
 
     return Card(
       margin: const EdgeInsets.all(16),
@@ -62,15 +66,14 @@ class RideCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.location_on_outlined,
-                        size: 18, color: AppConstants.borderColor),
+                    Icon(Icons.location_on_outlined,
+                        size: 18, color: iconColor),
                     const SizedBox(width: 4),
                     Expanded(
                         child: Text(pickup.name,
                             style: textStyle, overflow: TextOverflow.ellipsis)),
                     const SizedBox(width: 8),
-                    const Icon(Icons.flag_outlined,
-                        size: 18, color: AppConstants.borderColor),
+                    Icon(Icons.flag_outlined, size: 18, color: iconColor),
                     const SizedBox(width: 4),
                     Expanded(
                         child: Text(destination.name,
@@ -80,8 +83,7 @@ class RideCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.event_seat,
-                        size: 18, color: AppConstants.borderColor),
+                    Icon(Icons.event_seat, size: 18, color: iconColor),
                     const SizedBox(width: 4),
                     Text('${ride.seatsAvailable} seat(s) available',
                         style: textStyle),
@@ -90,8 +92,7 @@ class RideCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.access_time,
-                        size: 18, color: AppConstants.borderColor),
+                    Icon(Icons.access_time, size: 18, color: iconColor),
                     const SizedBox(width: 4),
                     Text(
                       '${ride.departureTime.day}/${ride.departureTime.month} at ${ride.departureTime.hour}:${ride.departureTime.minute.toString().padLeft(2, '0')}',
@@ -104,8 +105,8 @@ class RideCard extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.description_outlined,
-                          size: 18, color: AppConstants.borderColor),
+                      Icon(Icons.description_outlined,
+                          size: 18, color: iconColor),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -13,6 +14,15 @@ modelUser.User? userModel;
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
+  Future<void> saveUserFcmToken(String userId) async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    if (fcmToken != null) {
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'fcmToken': fcmToken,
+      });
+      print("✅ FCM token saved: $fcmToken");
+    }
+  }
 
   /// 创建 Firestore 用户文档（如果尚未存在）
   Future<void> _createUserDocumentIfNeeded(
@@ -46,6 +56,7 @@ class SignInPage extends StatelessWidget {
     );
 
     //Provider.of<UserProvider>(context, listen: false).setUser(userModel!);
+    await saveUserFcmToken(user.uid);
     if (context.mounted) {
       context.read<AuthenticationBloc>().add(
             AuthenticationSignedInEvent(),

@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:santa_clara/models/location.dart';
 import 'package:santa_clara/models/ride.dart';
+import 'package:santa_clara/models/user.dart';
 import 'package:santa_clara/ride/cubit/ride_state.dart';
 
 class RideCubit extends Cubit<RideState> {
@@ -24,9 +25,7 @@ class RideCubit extends Cubit<RideState> {
 
   Future<void> _tryFetchRides() async {
     if (_pickup != null && _destination != null) {
-      print('nefore%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
       await fetchRides(_pickup!, _destination!);
-      print('after%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
     }
   }
 
@@ -39,7 +38,6 @@ class RideCubit extends Cubit<RideState> {
   Future<void> fetchRides(
       LocationModel pickup, LocationModel destination) async {
     emit(RideLoading());
-    print('ohkkkll!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     try {
       final now = DateTime.now().toIso8601String();
       final querySnapshot = await firestore
@@ -47,14 +45,13 @@ class RideCubit extends Cubit<RideState> {
           .where('pickupLocation.address', isEqualTo: pickup.address)
           .where('destinationLocation.address', isEqualTo: destination.address)
           .where('departureTime', isGreaterThan: now)
+          .where('seatsAvailable', isGreaterThan: 0)
           .orderBy('createdAt', descending: true)
-          .get();
+          .get(const GetOptions(source: Source.server));
 
       final rides = querySnapshot.docs.map((doc) {
         final data = doc.data();
-
-        return Ride.fromMap(
-            doc.id, data); // assuming fromMap accepts Map and docId
+        return Ride.fromMap(doc.id, data);
       }).toList();
 
       emit(RideLoaded(rides));
@@ -67,13 +64,45 @@ class RideCubit extends Cubit<RideState> {
     emit(RideSelected(ride));
   }
 
-  Future<void> joinRide(String rideId) async {
+  Future<void> joinRide(String rideId, User user) async {
     try {
-      // Update logic as per your schema (e.g., add user to `joinedUsers` array)
+      // await firestore.runTransaction((transaction) async {
+      //   final docRef = firestore.collection('rides').doc(rideId);
+      //   final snapshot = await transaction.get(docRef);
+
+      //   if (!snapshot.exists) {
+      //     throw Exception('Ride does not exist.');
+      //   }
+
+      //   final data = snapshot.data();
+      //   if (data == null || !data.containsKey('seatsAvailable')) {
+      //     throw Exception('Invalid ride data.');
+      //   }
+
+      //   final seatsAvailable = data['seatsAvailable'] as int;
+
+      //   if (seatsAvailable <= 0) {
+      //     throw Exception('No seats available.');
+      //   }
+
+      //   transaction.update(docRef, {
+      //     'seatsAvailable': seatsAvailable - 1,
+      //     // You can also update joined users here if needed
+      //     // 'joinedUsers': FieldValue.arrayUnion(['currentUserId']),
+      //   });
+      // });
+// ...existing code...
       await firestore.collection('rides').doc(rideId).update({
-        // Example: Add user ID to a "joinedUsers" array
-        // 'joinedUsers': FieldValue.arrayUnion(['currentUserId']),
+        'joinedUsers': FieldValue.arrayUnion([
+          {
+            'uid': user.uid,
+            'name': user.name,
+            // Optionally add phone/email, etc.
+          }
+        ]),
+        'seatsAvailable': FieldValue.increment(-1)
       });
+// ...existing code...
 
       emit(RideJoined(rideId));
     } catch (e) {
@@ -84,7 +113,7 @@ class RideCubit extends Cubit<RideState> {
   Future<void> loadMyRidesSplit(String userId) async {
     emit(RideLoading());
     try {
-      final querySnapshot = await FirebaseFirestore.instance
+      final querySnapshot = await firestore
           .collection('rides')
           .where('driver.user.uid', isEqualTo: userId)
           .get();
@@ -99,6 +128,7 @@ class RideCubit extends Cubit<RideState> {
           .toList()
         ..sort((a, b) => (b.createdAt ?? DateTime(1970))
             .compareTo(a.createdAt ?? DateTime(1970)));
+
       final past =
           allRides.where((r) => r.departureTime.isBefore(now)).toList();
 

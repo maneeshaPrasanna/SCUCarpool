@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
 import 'package:santa_clara/constant/constant.dart';
 import 'package:santa_clara/models/ride.dart';
 import 'package:santa_clara/navigation/my_routes.dart';
@@ -17,6 +19,10 @@ class RideScreen extends StatefulWidget {
 }
 
 class _RideScreenState extends State<RideScreen> with WidgetsBindingObserver {
+  LocationPermission? permission;
+
+  bool _navigated = false;
+
   @override
   void initState() {
     super.initState();
@@ -31,22 +37,52 @@ class _RideScreenState extends State<RideScreen> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Optional: Reload rides when app resumes
-    if (state == AppLifecycleState.resumed) {
-      context.read<RideCubit>().loadRides();
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.resumed && mounted) {
+  //     Future.delayed(const Duration(milliseconds: 500), () {
+  //       if (mounted) {
+  //         context.read<RideCubit>().loadRides();
+  //       }
+  //     });
+  //   }
+  // }
 
   Future<void> _navigateToDetails(Ride ride) async {
-    context.read<RideCubit>().selectRide(ride);
+    final user = context.read<AuthenticationBloc>().user;
+    if (_navigated) return;
+    _navigated = true;
 
-    final result =
-        await context.pushNamed(MyRoutes.rideDetails.name, extra: ride);
+    try {
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        permission = await Geolocator.requestPermission();
+      }
 
-    if (result == true && mounted) {
-      context.read<RideCubit>().loadRides(); // Reload after return
+      if (permission == LocationPermission.always ||
+          permission == LocationPermission.whileInUse) {
+        if (!context.mounted) return;
+        await context.read<RideCubit>().joinRide(ride.id, user!);
+        context.read<RideCubit>().selectRide(ride);
+
+        final result =
+            await context.pushNamed(MyRoutes.rideDetails.name, extra: ride);
+
+        if (result == true && mounted) {
+          context.read<RideCubit>().loadRides();
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Location permission is required.")),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Navigation error: $e');
+    } finally {
+      _navigated = false;
     }
   }
 

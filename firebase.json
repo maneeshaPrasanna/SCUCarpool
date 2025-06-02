@@ -35,11 +35,32 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites":[
+    "rewrites": [
       {
         "source": "**",
-         "destination": "/index.html"
-     }
+        "destination": "/index.html"
+      }
     ]
+  },
+  "functions": 
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    },
+  
+
+ "emulators": {
+    "functions": {
+      "port": 5001
+    },"firestore": {
+    "port": 8080
+  }
   }
 }

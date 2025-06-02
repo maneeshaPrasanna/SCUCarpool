@@ -12,6 +12,7 @@ class DriverCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final user = Provider.of<UserProvider>(context).user;
+    print("driver image url :${driver.user.imageUrl}");
 
     return Card(
       margin: const EdgeInsets.all(12),
@@ -23,7 +24,7 @@ class DriverCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: AssetImage(driver.user.imageUrl),
+              backgroundImage: NetworkImage(driver.user.imageUrl),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -38,16 +39,16 @@ class DriverCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 18),
-                      const SizedBox(width: 4),
-                      Text(
-                        driver.rating.toStringAsFixed(1),
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     const Icon(Icons.star, color: Colors.amber, size: 18),
+                  //     const SizedBox(width: 4),
+                  //     Text(
+                  //       driver.rating.toStringAsFixed(1),
+                  //       style: const TextStyle(fontSize: 14),
+                  //     ),
+                  //   ],
+                  // ),
                   const SizedBox(height: 4),
                   Text(
                     "Car: ${driver.vehicle.maker} - ${driver.vehicle.carColor}",

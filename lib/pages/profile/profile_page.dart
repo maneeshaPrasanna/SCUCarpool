@@ -76,7 +76,7 @@ class _UserProfilePageState extends State<ProfilePage> {
       'avatarUrl': newAvatarUrl,
     });
     await currentUser?.updateDisplayName(nameController.text.trim());
-    await currentUser?.updatePhotoURL('xyz');
+    await currentUser?.updatePhotoURL(newAvatarUrl);
 
     // Optional: Reload the user to get updated values
     await currentUser?.reload();
@@ -89,7 +89,7 @@ class _UserProfilePageState extends State<ProfilePage> {
       await doc.reference.update({
         'driver.user.name': nameController.text.trim(),
         'driver.user.phoneNumber': phoneController.text.trim(),
-        'driver.user.imageUrl': 'xyz',
+        'driver.user.imageUrl': newAvatarUrl,
       });
     }
     setState(() {

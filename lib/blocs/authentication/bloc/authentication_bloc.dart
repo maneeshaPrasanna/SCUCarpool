@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:santa_clara/models/auth_user.dart';
 import 'package:santa_clara/models/user.dart';
 import 'package:santa_clara/repositories/authentication/authentication_repository.dart';
@@ -63,20 +65,44 @@ class AuthenticationBloc
     authenticationRepository.signOut();
   }
 
-  void updateUser(AuthUser authUser) {
+  void updateUser(AuthUser authUser) async {
     print("heyyyyaaa");
+    final uid = authUser.uid;
+
+    final userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (!userDoc.exists) {
+      throw Exception('User not found in Firestore');
+    }
+
+    final userData = userDoc.data()!;
 
     user = User(
       email: authUser.email!,
       uid: authUser.uid!,
       name: authUser.displayName ?? "",
-      imageUrl: authUser.imageUrl ?? Mock.imageUrl(),
+
       emailVerified: authUser.emailVerified ?? false,
-      phoneNumber:
-          "1234567890", // Placeholder, replace with actual phone number if available
+      imageUrl: userData['avatarUrl'] ?? '', // or a fallback if needed
+      phoneNumber: userData['phoneNumber'] ?? '',
+
       createdAt: DateTime.now(),
     );
 
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    if (fcmToken != null) {
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'fcmToken': fcmToken,
+      });
+      print("✅ FCM Token saved to Firestore: $fcmToken");
+    }
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'fcmToken': newToken,
+      });
+      print("🔁 FCM Token refreshed and updated: $newToken");
+    });
     print("jiii ${authUser.displayName}");
     if (user!.emailVerified) {
       add(AuthenticationSignedInEvent());

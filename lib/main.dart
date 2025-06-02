@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:santa_clara/location/location_cubit.dart';
 import 'package:santa_clara/offerRide/cubit/offer_ride_cubit.dart';
@@ -31,7 +33,10 @@ void main() async {
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),
   ]);
+  await FirebaseMessaging.instance.requestPermission();
   Bloc.observer = const AppBlocObserver();
+
+  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   runApp(MyApp());
 }
 

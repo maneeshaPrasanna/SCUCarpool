@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
 import 'package:santa_clara/constant/constant.dart';
@@ -35,6 +36,7 @@ class _OfferRidePageState extends State<OfferRidePage> {
         destinationLocation != null &&
         selectedDateTime != null) {
       final user = context.read<AuthenticationBloc>().user;
+      print("user.imageee ${user?.imageUrl}");
       if (user == null) return;
       context.read<OfferRideCubit>().offerRide(
             pickupLocation: pickupLocation!,
@@ -92,8 +94,13 @@ class _OfferRidePageState extends State<OfferRidePage> {
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                context.pop();
+              },
+            ),
           ),
-          drawer: const MainDrawer(),
           body: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Column(

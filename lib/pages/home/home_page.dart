@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
 import 'package:santa_clara/models/ride.dart';
 import 'package:santa_clara/navigation/my_routes.dart';
 import 'package:santa_clara/pages/offer_ride.dart';
@@ -114,6 +115,7 @@ class HomePage extends StatelessWidget {
                   .collection('rides')
                   .where('departureTime',
                       isGreaterThan: DateTime.now().toIso8601String())
+                  .where('seatsAvailable', isGreaterThan: 0)
                   .orderBy('createdAt', descending: true)
                   .limit(10)
                   .snapshots(),
@@ -145,8 +147,12 @@ class HomePage extends StatelessWidget {
                     final ride = rides[index];
                     return RideCard(
                       ride: ride,
-                      onJoin: () {
+                      onJoin: () async {
+                        final user = context.read<AuthenticationBloc>().user;
                         print('Joining ride: ${ride.id}');
+                        await context
+                            .read<RideCubit>()
+                            .joinRide(ride.id, user!);
                         context.read<RideCubit>().selectRide(ride);
                         // Navigator.of(context).push(
                         //   MaterialPageRoute(

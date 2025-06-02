@@ -37,6 +37,8 @@ class Ride {
   }
 
   static Ride fromMap(String id, Map<String, dynamic> map) {
+    print('Ride user image URL: ${map['driver']?['user']?['imageUrl']}');
+
     return Ride(
       id: id,
       pickupLocation: LocationModel.fromMap(map['pickupLocation']),
