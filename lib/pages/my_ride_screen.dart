@@ -27,14 +27,16 @@ class _MyRideScreenState extends State<MyRideScreen> with RouteAware {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Rides"),
-        backgroundColor: AppConstants.borderColor,
+        centerTitle: true,
+        backgroundColor: const Color(0xFF811E2D), // Maroon color
+        iconTheme: const IconThemeData(color: Colors.white), // White icons
+        title: const Text('Activity'),
+        elevation: 2,
         titleTextStyle: const TextStyle(
-          fontSize: 18,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: BlocBuilder<RideCubit, RideState>(
         builder: (context, state) {

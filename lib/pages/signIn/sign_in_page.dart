@@ -3,14 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
-import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
-import 'package:santa_clara/models/user.dart' as modelUser;
 
 import 'package:santa_clara/pages/signIn/sign_in_header.dart';
-import 'package:santa_clara/repositories/user_provider.dart';
-
-modelUser.User? userModel;
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -25,42 +19,43 @@ class SignInPage extends StatelessWidget {
   }
 
   /// 创建 Firestore 用户文档（如果尚未存在）
-  Future<void> _createUserDocumentIfNeeded(
-      auth.User user, BuildContext context) async {
-    final docRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
-    final doc = await docRef.get();
+  Future<void> _createUserDocumentIfNeeded(auth.User user) async {
+    final userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final userDoc = await userDocRef.get();
 
-    if (!doc.exists) {
-      print('create new user documnet：${user.uid}');
-      await docRef.set({
+    if (!userDoc.exists) {
+      print('Create new user document: ${user.uid}');
+      await userDocRef.set({
         'uid': user.uid,
         'email': user.email,
-        'name': user.displayName ?? '',
-        'phoneNumber': user.phoneNumber ?? '',
-        'avatarUrl': user.photoURL ?? '',
+        'name': '',
+        'phoneNumber': '',
+        'avatarUrl': '',
         'createdAt': FieldValue.serverTimestamp(),
       });
     } else {
-      print('user document exists：${user.uid}');
+      print('User document exists: ${user.uid}');
     }
-    final fetchedDoc = await docRef.get();
-    final data = fetchedDoc.data()!;
-    userModel = modelUser.User(
-      email: user.email!,
-      uid: user.uid,
-      name: user.displayName ?? "",
-      imageUrl: user.photoURL ?? "",
-      emailVerified: user.emailVerified ?? false,
-      phoneNumber: user.phoneNumber ?? "",
-      createdAt: DateTime.now(),
-    );
+    // 👇 同时创建对应的 car 文档
+    await _createCarDocument(user.uid);
+  }
 
-    //Provider.of<UserProvider>(context, listen: false).setUser(userModel!);
-    await saveUserFcmToken(user.uid);
-    if (context.mounted) {
-      context.read<AuthenticationBloc>().add(
-            AuthenticationSignedInEvent(),
-          );
+  /// 创建 Firestore 车辆文档（初始为空）
+  Future<void> _createCarDocument(String uid) async {
+    final carDocRef = FirebaseFirestore.instance.collection('cars').doc(uid);
+    final carDoc = await carDocRef.get();
+
+    if (!carDoc.exists) {
+      print('Create new car document for uid: $uid');
+      await carDocRef.set({
+        'uid': uid,
+        'maker': '',
+        'model': '',
+        'plate': '',
+      });
+    } else {
+      print('Car document already exists for uid: $uid');
     }
   }
 
@@ -84,19 +79,19 @@ class SignInPage extends StatelessWidget {
             const SignInHeader(),
         providers: [EmailAuthProvider()],
         actions: [
-          // createUserDocument when regisiter
+          // 注册时创建用户和车辆文档
           AuthStateChangeAction<UserCreated>((context, state) async {
             final user = auth.FirebaseAuth.instance.currentUser;
             if (user != null) {
-              await _createUserDocumentIfNeeded(user, context);
+              await _createUserDocumentIfNeeded(user);
             }
           }),
 
-          // createUserDocument if there is no such documnet when sign in
+          // 登录时若文档不存在则创建
           AuthStateChangeAction<SignedIn>((context, state) async {
             final user = auth.FirebaseAuth.instance.currentUser;
             if (user != null) {
-              await _createUserDocumentIfNeeded(user, context);
+              await _createUserDocumentIfNeeded(user);
             }
           }),
         ],
