@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
 
 import 'package:santa_clara/pages/signIn/sign_in_header.dart';
 
@@ -19,7 +21,8 @@ class SignInPage extends StatelessWidget {
   }
 
   /// 创建 Firestore 用户文档（如果尚未存在）
-  Future<void> _createUserDocumentIfNeeded(auth.User user) async {
+  Future<void> _createUserDocumentIfNeeded(
+      auth.User user, BuildContext context) async {
     final userDocRef =
         FirebaseFirestore.instance.collection('users').doc(user.uid);
     final userDoc = await userDocRef.get();
@@ -39,6 +42,17 @@ class SignInPage extends StatelessWidget {
     }
     // 👇 同时创建对应的 car 文档
     await _createCarDocument(user.uid);
+
+    final fetchedDoc = await userDocRef.get();
+    final data = fetchedDoc.data()!;
+
+    //Provider.of<UserProvider>(context, listen: false).setUser(userModel!);
+    await saveUserFcmToken(user.uid);
+    if (context.mounted) {
+      context.read<AuthenticationBloc>().add(
+            AuthenticationSignedInEvent(),
+          );
+    }
   }
 
   /// 创建 Firestore 车辆文档（初始为空）
@@ -83,7 +97,7 @@ class SignInPage extends StatelessWidget {
           AuthStateChangeAction<UserCreated>((context, state) async {
             final user = auth.FirebaseAuth.instance.currentUser;
             if (user != null) {
-              await _createUserDocumentIfNeeded(user);
+              await _createUserDocumentIfNeeded(user, context);
             }
           }),
 
@@ -91,7 +105,7 @@ class SignInPage extends StatelessWidget {
           AuthStateChangeAction<SignedIn>((context, state) async {
             final user = auth.FirebaseAuth.instance.currentUser;
             if (user != null) {
-              await _createUserDocumentIfNeeded(user);
+              await _createUserDocumentIfNeeded(user, context);
             }
           }),
         ],
