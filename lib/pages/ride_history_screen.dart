@@ -53,7 +53,8 @@ class RideHistoryScreen extends StatelessWidget {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text("No ride history available."));
+                  return const Center(
+                      child: Text("No ride history available."));
                 }
 
                 final rides = snapshot.data!.docs;
@@ -75,8 +76,8 @@ class RideHistoryScreen extends StatelessWidget {
                             (data["user"] as Map<String, dynamic>?) ??
                             {};
                     final userName = userMap["name"] ?? "Unnamed";
-                    final avatar =
-                        userMap["imageUrl"] ?? "https://via.placeholder.com/150";
+                    final avatar = userMap["imageUrl"] ??
+                        "https://via.placeholder.com/150";
 
                     // Rating
                     final rating = data["driver"]?["rating"]?.toString() ??
@@ -85,16 +86,19 @@ class RideHistoryScreen extends StatelessWidget {
 
                     // Car details
                     String car = "Unknown";
-                    if (data.containsKey("vehicle") &&
-                        data["vehicle"] is Map<String, dynamic>) {
-                      final v = Map<String, dynamic>.from(data["vehicle"]);
-                      final parts = [
-                        v["carColor"],
-                        v["maker"],
-                        v["model"]
-                      ].whereType<String>().toList();
-                      if (parts.isNotEmpty) {
-                        car = parts.join(" ");
+                    if (data["driver"] is Map<String, dynamic>) {
+                      final driverMap =
+                          Map<String, dynamic>.from(data["driver"]);
+                      if (driverMap.containsKey("vehicle") &&
+                          driverMap["vehicle"] is Map<String, dynamic>) {
+                        final v =
+                            Map<String, dynamic>.from(driverMap["vehicle"]);
+                        final parts = [v["carColor"], v["maker"], v["model"]]
+                            .whereType<String>()
+                            .toList();
+                        if (parts.isNotEmpty) {
+                          car = parts.join(" ");
+                        }
                       }
                     }
 
@@ -107,8 +111,8 @@ class RideHistoryScreen extends StatelessWidget {
                     final fromAddress = pickup?["address"] ?? "";
 
                     return Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                       child: Card(
                         elevation: 3,
                         child: Padding(
@@ -124,7 +128,8 @@ class RideHistoryScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 12),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         userName,
@@ -140,9 +145,11 @@ class RideHistoryScreen extends StatelessWidget {
                                           Text(rating),
                                         ],
                                       ),
-                                      Text("Car: ${car.isNotEmpty ? car : "Unknown"}"),
+                                      Text(
+                                          "Car: ${car.isNotEmpty ? car : "Unknown"}"),
                                       if (dateTime != null)
-                                        Text("When: ${DateFormat('M/d/yy, h:mm a').format(dateTime)}"),
+                                        Text(
+                                            "When: ${DateFormat('M/d/yy, h:mm a').format(dateTime)}"),
                                     ],
                                   )
                                 ],
