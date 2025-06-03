@@ -66,32 +66,6 @@ class RideCubit extends Cubit<RideState> {
 
   Future<void> joinRide(String rideId, User user) async {
     try {
-      // await firestore.runTransaction((transaction) async {
-      //   final docRef = firestore.collection('rides').doc(rideId);
-      //   final snapshot = await transaction.get(docRef);
-
-      //   if (!snapshot.exists) {
-      //     throw Exception('Ride does not exist.');
-      //   }
-
-      //   final data = snapshot.data();
-      //   if (data == null || !data.containsKey('seatsAvailable')) {
-      //     throw Exception('Invalid ride data.');
-      //   }
-
-      //   final seatsAvailable = data['seatsAvailable'] as int;
-
-      //   if (seatsAvailable <= 0) {
-      //     throw Exception('No seats available.');
-      //   }
-
-      //   transaction.update(docRef, {
-      //     'seatsAvailable': seatsAvailable - 1,
-      //     // You can also update joined users here if needed
-      //     // 'joinedUsers': FieldValue.arrayUnion(['currentUserId']),
-      //   });
-      // });
-// ...existing code...
       await firestore.collection('rides').doc(rideId).update({
         'joinedUsers': FieldValue.arrayUnion([
           {
@@ -102,6 +76,11 @@ class RideCubit extends Cubit<RideState> {
         ]),
         'seatsAvailable': FieldValue.increment(-1)
       });
+      // await FirebaseFirestore.instance.collection('rideHistory').add({
+      //   'userId': user.uid,
+      //   'rideId': rideId,
+      // });
+
 // ...existing code...
 
       emit(RideJoined(rideId));

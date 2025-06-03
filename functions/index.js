@@ -3,8 +3,10 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 exports.notifyDriverOnJoin = onDocumentUpdated('rides/{rideId}', async (event) => {
-  const beforeData = event.data.before;
-  const afterData = event.data.after;
+  console.log('✅ Function triggered');
+
+  const beforeData = event.data.before?.data();
+  const afterData = event.data.after?.data();
 
   if (!beforeData || !afterData) {
     console.log('Missing before/after data');
@@ -13,6 +15,8 @@ exports.notifyDriverOnJoin = onDocumentUpdated('rides/{rideId}', async (event) =
 
   const beforeUsers = beforeData.joinedUsers || {};
   const afterUsers = afterData.joinedUsers || {};
+console.log('📌 Before Users:', JSON.stringify(beforeUsers));
+  console.log('📌 After Users:', JSON.stringify(afterUsers));
 
   // Get list of uids
   const beforeUids = Object.keys(beforeUsers);
@@ -25,14 +29,14 @@ exports.notifyDriverOnJoin = onDocumentUpdated('rides/{rideId}', async (event) =
   const newUserId = newUids[0];
   const newUser = afterUsers[newUserId];
   const newUserName = newUser.name || 'A user';
+   console.log(`🧑 New user joined: ${newUserName} (${newUserId})`);
 
   // Get driver's FCM token
-  const driverId = afterData.driverId;
+  const driverId = afterData.driver?.user?.uid;
   if (!driverId) {
     console.log('Driver ID is missing in afterData');
     return;
   }
-  console.log("ppgohpfdkjghiurehhptlkhrtkh");
 
   const driverDoc = await admin.firestore().collection('users').doc(driverId).get();
   const driverData = driverDoc.data();

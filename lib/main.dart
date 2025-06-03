@@ -22,6 +22,8 @@ import 'repositories/authentication/authentication_repository.dart';
 import 'theme/cubit/theme_cubit.dart';
 import 'theme/util.dart';
 import 'package:provider/provider.dart';
+import 'package:santa_clara/animations/splash_screen.dart';
+import 'navigation/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

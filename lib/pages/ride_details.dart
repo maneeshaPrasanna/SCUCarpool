@@ -38,9 +38,8 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
 
     if (!_hasPermission()) {
       permission = await Geolocator.requestPermission();
-      print('Location permission status: $permission');
+
       if (!_hasPermission()) {
-        print('Location permission statusssss: $permission');
         if (mounted) {
           showDialog(
             context: context,
@@ -63,9 +62,6 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
 
     setState(() {
       _locationReady = true;
-
-      print('Location permission granted: $permission');
-      print('Location tracking initialized');
     });
 
     try {
@@ -79,14 +75,13 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
         final userLatLng = LatLng(position.latitude, position.longitude);
 
         if (!mounted) {
-          print('Widget is not mounted, skipping state update.');
           return;
         }
 
         setState(() {
           _currentUserLocation = userLatLng;
         });
-        print('User location updated: $userLatLng');
+
         try {
           mapController.animateCamera(
             CameraUpdate.newLatLng(userLatLng),

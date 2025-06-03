@@ -5,9 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
 import 'package:santa_clara/models/ride.dart';
 import 'package:santa_clara/navigation/my_routes.dart';
-import 'package:santa_clara/pages/offer_ride.dart';
-import 'package:santa_clara/pages/ride_details.dart';
-import 'package:santa_clara/pages/search_page.dart';
 import 'package:santa_clara/ride/cubit/ride_cubit.dart';
 import 'package:santa_clara/widgets/main_drawer.dart';
 import 'package:santa_clara/widgets/ride_card.dart';
@@ -68,6 +65,7 @@ class HomePage extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   )),
+                  const SizedBox(height: 16), // optional spacing
                 ],
               ),
             ),

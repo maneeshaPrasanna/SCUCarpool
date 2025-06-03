@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
-import 'package:santa_clara/constant/constant.dart';
+
 import 'package:santa_clara/ride/cubit/ride_cubit.dart';
 import 'package:santa_clara/ride/cubit/ride_state.dart';
 import 'package:santa_clara/widgets/ride_card.dart';
+import 'package:go_router/go_router.dart';
 
 class MyRideScreen extends StatefulWidget {
   const MyRideScreen({super.key});
@@ -46,6 +47,19 @@ class _MyRideScreenState extends State<MyRideScreen> with RouteAware {
             return ListView(
               padding: const EdgeInsets.all(8),
               children: [
+                ElevatedButton(
+                  onPressed: () {
+                    context.push('/ride-history');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF811E2D),
+                  ),
+                  child: const Text(
+                    "Ride History",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 if (state.upcoming.isNotEmpty) ...[
                   const Text("Upcoming Rides",
                       style:
