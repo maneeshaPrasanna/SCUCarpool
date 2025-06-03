@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart' as modelUser;
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
 import 'package:santa_clara/models/location.dart';
 import 'package:santa_clara/models/ride.dart';
 import 'package:santa_clara/models/user.dart';
@@ -48,10 +51,11 @@ class RideCubit extends Cubit<RideState> {
           .where('seatsAvailable', isGreaterThan: 0)
           .orderBy('createdAt', descending: true)
           .get(const GetOptions(source: Source.server));
+      final userId = modelUser.FirebaseAuth.instance.currentUser?.uid;
 
       final rides = querySnapshot.docs.map((doc) {
         final data = doc.data();
-        return Ride.fromMap(doc.id, data);
+        return Ride.fromMapWithUser(doc.id, data, userId!);
       }).toList();
 
       emit(RideLoaded(rides));
@@ -66,16 +70,29 @@ class RideCubit extends Cubit<RideState> {
 
   Future<void> joinRide(String rideId, User user) async {
     try {
+      final rideDoc = await firestore.collection('rides').doc(rideId).get();
+      final rideData = rideDoc.data();
+      if (rideData == null) throw Exception("Ride not found");
+
+      final joinedUsers =
+          List<Map<String, dynamic>>.from(rideData['joinedUsers'] ?? []);
+
+      // Check if user already joined
+      final alreadyJoined = joinedUsers.any((u) => u['uid'] == user.uid);
+      if (alreadyJoined) {
+        return;
+      }
+
       await firestore.collection('rides').doc(rideId).update({
         'joinedUsers': FieldValue.arrayUnion([
           {
             'uid': user.uid,
             'name': user.name,
-            // Optionally add phone/email, etc.
           }
         ]),
-        'seatsAvailable': FieldValue.increment(-1)
+        'seatsAvailable': FieldValue.increment(-1),
       });
+
       // await FirebaseFirestore.instance.collection('rideHistory').add({
       //   'userId': user.uid,
       //   'rideId': rideId,

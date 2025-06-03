@@ -134,7 +134,8 @@ class HomePage extends StatelessWidget {
 
                 final rides = snapshot.data!.docs.map((doc) {
                   print('Joining ride: ${doc.id}');
-                  return Ride.fromMap(doc.id, doc.data());
+                  final user = context.read<AuthenticationBloc>().user;
+                  return Ride.fromMapWithUser(doc.id, doc.data(), user!.uid);
                 }).toList();
                 return ListView.builder(
                   shrinkWrap: true, // Important for use inside a ScrollView

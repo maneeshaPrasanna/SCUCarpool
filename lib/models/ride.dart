@@ -12,6 +12,7 @@ class Ride {
   final Driver driver;
   final String description;
   final DateTime? createdAt;
+  final bool hasJoined;
 
   Ride({
     required this.id,
@@ -22,6 +23,7 @@ class Ride {
     required this.driver,
     required this.description,
     this.createdAt,
+    this.hasJoined = false,
   });
 
   Map<String, dynamic> toMap({bool includeServerTimestamp = false}) {
@@ -54,6 +56,31 @@ class Ride {
           : map['createdAt'] != null
               ? DateTime.tryParse(map['createdAt'])
               : null,
+    );
+  }
+
+  static Ride fromMapWithUser(
+      String id, Map<String, dynamic> map, String currentUserId) {
+    final joinedUsers = map['joinedUsers'] as List<dynamic>? ?? [];
+    final alreadyJoined =
+        joinedUsers.any((user) => user['uid'] == currentUserId);
+
+    return Ride(
+      id: id,
+      pickupLocation: LocationModel.fromMap(map['pickupLocation']),
+      destinationLocation: LocationModel.fromMap(map['destinationLocation']),
+      departureTime: map['departureTime'] is Timestamp
+          ? (map['departureTime'] as Timestamp).toDate()
+          : DateTime.parse(map['departureTime']),
+      seatsAvailable: map['seatsAvailable'],
+      driver: Driver.fromMap(map['driver']),
+      description: map['description'],
+      createdAt: map['createdAt'] is Timestamp
+          ? (map['createdAt'] as Timestamp).toDate()
+          : map['createdAt'] != null
+              ? DateTime.tryParse(map['createdAt'])
+              : null,
+      hasJoined: alreadyJoined, // <-- new flag
     );
   }
 
