@@ -90,21 +90,16 @@ class _RideScreenState extends State<RideScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppConstants.borderColor,
+        centerTitle: true,
+        backgroundColor: const Color(0xFF811E2D), // Maroon color
+        iconTheme: const IconThemeData(color: Colors.white), // White icons
+        title: const Text('Available Rides'),
         elevation: 2,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            context.pop();
-          },
-        ),
-        title: const Text("Available Rides"),
         titleTextStyle: const TextStyle(
-          fontSize: 18,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: BlocBuilder<RideCubit, RideState>(
         builder: (context, state) {

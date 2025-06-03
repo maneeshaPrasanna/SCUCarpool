@@ -128,7 +128,7 @@ class HomePage extends StatelessWidget {
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: Text('No available rides at the moment.'),
+                    child: Text('No Available Rides at the Moment.'),
                   );
                 }
 

@@ -122,20 +122,16 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
     const textStyle = TextStyle(color: AppConstants.borderColor);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF811E2D),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF811E2D), // Maroon color
+        iconTheme: const IconThemeData(color: Colors.white), // White icons
         title: const Text('Ride Details'),
+        elevation: 2,
         titleTextStyle: const TextStyle(
-          fontSize: 18,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context, true);
-              debugPrint("👈 Popped context in RideScreen!");
-            }),
       ),
       body: Builder(builder: (context) {
         try {
@@ -188,8 +184,19 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Text(
+                          "You have successfully joined this ride!",
+                          style: TextStyle(
+                            color: Color(0xFF811E2D),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
                       DriverCard(driver: ride.driver),
                       const SizedBox(height: 16),
                       Row(
@@ -201,7 +208,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                           const SizedBox(width: 4),
                           Flexible(
                               child: Text(ride.pickupLocation.name,
-                                  style: textStyle,
+                                  style:const TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Color(0xFF811E2D),),
                                   overflow: TextOverflow.ellipsis)),
                           const SizedBox(width: 8),
                           const Icon(Icons.flag_outlined,
@@ -209,40 +216,47 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                           const SizedBox(width: 4),
                           Flexible(
                               child: Text(ride.destinationLocation.name,
-                                  style: textStyle,
+                                  style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Color(0xFF811E2D),),
                                   overflow: TextOverflow.ellipsis)),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
                       Text(
-                        'Seats Available: ${ride.seatsAvailable - 1}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        'Seats Available:',
+                        style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
                       ),
-                      const SizedBox(height: 16),
                       Text(
-                        'Departure: ${ride.departureTime.toLocal().toString().split('.').first}',
+                        ' ${ride.seatsAvailable - 1}',
+                        style: const TextStyle(fontSize: 16),
                       ),
-                      const SizedBox(height: 8),
+                        ]
+                      ),
+                      const SizedBox(height: 10),
+                      Row(children: [
+                      Text(
+                        'Departure: ',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize:16),
+                      ),
+                      Text(
+                        '${ride.departureTime.toLocal().toString().split('.').first}',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      ]
+                      ),
+                      const SizedBox(height: 10),
                       if (ride.description.isNotEmpty) ...[
                         const Text(
                           'Notes:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize:16),
                         ),
-                        const SizedBox(height: 8),
-                        Text(ride.description),
+                        Text(ride.description,
+                        style: const TextStyle(fontSize: 16)),
                       ],
-                      const SizedBox(height: 20),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: Text(
-                          "You have successfully joined this ride!",
-                          style: TextStyle(
-                            color: Color(0xFF811E2D),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
+                      
+                      
+                     
                       // OutlinedButton(
                       //   onPressed: () {
                       //     // TODO: Open chat or request
