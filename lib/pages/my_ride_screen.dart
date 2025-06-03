@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:santa_clara/blocs/authentication/bloc/authentication_bloc.dart';
-
+import 'package:santa_clara/widgets/main_drawer.dart';
 import 'package:santa_clara/ride/cubit/ride_cubit.dart';
 import 'package:santa_clara/ride/cubit/ride_state.dart';
 import 'package:santa_clara/widgets/ride_card.dart';
@@ -91,6 +91,8 @@ class _MyRideScreenState extends State<MyRideScreen> with RouteAware {
           }
         },
       ),
+
+      drawer: MainDrawer(),
     );
   }
 }

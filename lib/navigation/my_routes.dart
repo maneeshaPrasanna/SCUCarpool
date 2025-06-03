@@ -1,12 +1,8 @@
-import 'package:santa_clara/pages/generic/generic_page.dart';
 import 'package:santa_clara/pages/home/home_page.dart';
 import 'package:santa_clara/pages/my_ride_screen.dart';
-import 'package:santa_clara/pages/offer_ride.dart';
-import 'package:santa_clara/pages/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:santa_clara/pages/settings/setting_page.dart';
-import 'package:go_router/go_router.dart';
 
 class MyRoutes {
   static MyRoute home = MyRoute(name: 'home', path: '/');

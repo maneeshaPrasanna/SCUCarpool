@@ -64,15 +64,15 @@ class _AddCarPageState extends State<CarPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          "Car Information",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
+        backgroundColor: const Color(0xFF811E2D), // Maroon color
+        iconTheme: const IconThemeData(color: Colors.white), // White icons
+        title: const Text('Car Information'),
+        elevation: 2,
+        titleTextStyle: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
-        backgroundColor: const Color.fromARGB(255, 129, 30, 45),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
@@ -107,7 +107,8 @@ class _AddCarPageState extends State<CarPage> {
                       onPressed: _saveCarData,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 129, 30, 45),
-                        foregroundColor: Colors.white, // ✅ 设置字体颜色
+                        foregroundColor: Colors.white, 
+                        
                       ),
                       child: const Text('Save'),
                     ),

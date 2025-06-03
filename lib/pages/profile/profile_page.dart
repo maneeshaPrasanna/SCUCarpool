@@ -112,15 +112,15 @@ class _UserProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          "My Profile",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
+        backgroundColor: const Color(0xFF811E2D), // Maroon color
+        iconTheme: const IconThemeData(color: Colors.white), // White icons
+        title: const Text('My Profile'),
+        elevation: 2,
+        titleTextStyle: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
-        backgroundColor: const Color.fromARGB(255, 129, 30, 45),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -142,6 +142,7 @@ class _UserProfilePageState extends State<ProfilePage> {
                           userAvatarSize: UserAvatarSize.large),
             ),
             const SizedBox(height: 10),
+            
             TextField(
               controller: nameController,
               enabled: isEditing,
@@ -158,6 +159,9 @@ class _UserProfilePageState extends State<ProfilePage> {
               decoration: const InputDecoration(labelText: 'Phone Number'),
             ),
             const SizedBox(height: 20),
+            SizedBox(
+  width: double.infinity,
+  child:
             ElevatedButton(
               onPressed: isEditing
                   ? _saveProfile
@@ -165,8 +169,10 @@ class _UserProfilePageState extends State<ProfilePage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 129, 30, 45),
                 foregroundColor: Colors.white, // ✅ 设置字体颜色
+                
               ),
-              child: Text('Save'),
+              child: const Text('Save'),
+            ),
             ),
           ],
         ),

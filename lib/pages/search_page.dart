@@ -32,19 +32,16 @@ class _PlanYourRidePageState extends State<PlanYourRidePage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: maroon,
+        centerTitle: true,
+        backgroundColor: const Color(0xFF811E2D), // Maroon color
+        iconTheme: const IconThemeData(color: Colors.white), // White icons
+        title: const Text('Plan Your Ride'),
         elevation: 2,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
-        title: const Text("Plan Your Ride"),
         titleTextStyle: const TextStyle(
-          fontSize: 18,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
       ),
       backgroundColor: Colors.white,
       body: BlocListener<RideCubit, RideState>(
