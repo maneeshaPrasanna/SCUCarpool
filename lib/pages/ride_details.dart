@@ -25,10 +25,8 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    debugPrint("🚀 RideDetailsScreen initState for ride: ${widget.ride.id}");
+    debugPrint("🚀 RideDetailsScreen initState for ride: \${widget.ride.id}");
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      //Future.delayed(const Duration(milliseconds: 300), () {
-      // Initialize location tracking after the first frame is rendered
       _initializeLocationTracking();
     });
   }
@@ -56,7 +54,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
             ),
           );
         }
-        //return;
+        return;
       }
     }
 
@@ -65,7 +63,6 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
     });
 
     try {
-      print('Starting position stream...');
       positionStreamSubscription = Geolocator.getPositionStream(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.bestForNavigation,
@@ -74,9 +71,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
       ).listen((Position position) {
         final userLatLng = LatLng(position.latitude, position.longitude);
 
-        if (!mounted) {
-          return;
-        }
+        if (!mounted) return;
 
         setState(() {
           _currentUserLocation = userLatLng;
@@ -87,11 +82,11 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
             CameraUpdate.newLatLng(userLatLng),
           );
         } catch (e) {
-          debugPrint('Camera animation error: $e');
+          debugPrint('Camera animation error: \$e');
         }
       });
     } catch (e) {
-      debugPrint('Error starting position stream: $e');
+      debugPrint('Error starting position stream: \$e');
     }
   }
 
@@ -120,11 +115,12 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
   Widget build(BuildContext context) {
     final ride = widget.ride;
     const textStyle = TextStyle(color: AppConstants.borderColor);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color(0xFF811E2D), // Maroon color
-        iconTheme: const IconThemeData(color: Colors.white), // White icons
+        backgroundColor: const Color(0xFF811E2D),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text('Ride Details'),
         elevation: 2,
         titleTextStyle: const TextStyle(
@@ -208,7 +204,11 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                           const SizedBox(width: 4),
                           Flexible(
                               child: Text(ride.pickupLocation.name,
-                                  style:const TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Color(0xFF811E2D),),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Color(0xFF811E2D),
+                                  ),
                                   overflow: TextOverflow.ellipsis)),
                           const SizedBox(width: 8),
                           const Icon(Icons.flag_outlined,
@@ -216,66 +216,54 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                           const SizedBox(width: 4),
                           Flexible(
                               child: Text(ride.destinationLocation.name,
-                                  style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Color(0xFF811E2D),),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Color(0xFF811E2D),
+                                  ),
                                   overflow: TextOverflow.ellipsis)),
                         ],
                       ),
                       const SizedBox(height: 10),
                       Row(
                         children: [
-                      Text(
-                        'Seats Available:',
-                        style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
-                      ),
-                      Text(
-                        ' ${ride.seatsAvailable - 1}',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                        ]
+                          const Text(
+                            'Seats Available:',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Text(
+                            ' ${ride.seatsAvailable - 1}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 10),
-                      Row(children: [
-                      Text(
-                        'Departure: ',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize:16),
-                      ),
-                      Text(
-                        '${ride.departureTime.toLocal().toString().split('.').first}',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      ]
+                      Row(
+                        children: [
+                          const Text(
+                            'Departure: ',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Text(
+                            '${ride.departureTime.toLocal().toString().split('.').first}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 10),
                       if (ride.description.isNotEmpty) ...[
                         const Text(
                           'Notes:',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize:16),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
-                        Text(ride.description,
-                        style: const TextStyle(fontSize: 16)),
+                        Text(
+                          ride.description,
+                          style: const TextStyle(fontSize: 16),
+                        ),
                       ],
-                      
-                      
-                     
-                      // OutlinedButton(
-                      //   onPressed: () {
-                      //     // TODO: Open chat or request
-                      //   },
-                      //   style: OutlinedButton.styleFrom(
-                      //     side: const BorderSide(color: Color(0xFF811E2D)),
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //     ),
-                      //   ),
-                      //   child: const Padding(
-                      //     padding:
-                      //         EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      //     child: Text(
-                      //       'Chat with Driver',
-                      //       style: TextStyle(color: Color(0xFF811E2D)),
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -283,7 +271,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
             ),
           );
         } catch (e, stackTrace) {
-          debugPrint('🚨 RideDetailsScreen build error: $e\n$stackTrace');
+          debugPrint('🚨 RideDetailsScreen build error: \$e\n\$stackTrace');
           return const Center(
             child: Text(
               "Something went wrong while loading the ride details.",
