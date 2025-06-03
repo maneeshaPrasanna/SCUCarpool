@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:santa_clara/utilities/route_observer.dart';
 
 import 'blocs/authentication/bloc/authentication_bloc.dart';
 import 'firebase_options.dart';
@@ -22,23 +21,30 @@ import 'repositories/authentication/authentication_repository.dart';
 import 'theme/cubit/theme_cubit.dart';
 import 'theme/util.dart';
 import 'package:provider/provider.dart';
-import 'package:santa_clara/animations/splash_screen.dart';
-import 'navigation/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
+
+  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // Configure Firebase UI Auth provider
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),
   ]);
+
+  // Ask user permission for notifications
   await FirebaseMessaging.instance.requestPermission();
+
+  // Use local emulator for cloud functions during development
+  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+
+  // Observe Bloc transitions globally
   Bloc.observer = const AppBlocObserver();
 
-  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   runApp(MyApp());
 }
 
