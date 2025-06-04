@@ -14,7 +14,7 @@ class SettingPage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: const Color(0xFF811E2D), // Maroon color
         iconTheme: const IconThemeData(color: Colors.white), // White icons
-        title: const Text('Setting'),
+        title: const Text('Settings'),
         elevation: 2,
         titleTextStyle: const TextStyle(
           fontSize: 24,
