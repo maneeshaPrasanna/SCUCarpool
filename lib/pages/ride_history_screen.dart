@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RideHistoryScreen extends StatelessWidget {
   const RideHistoryScreen({super.key});
@@ -41,6 +42,7 @@ class RideHistoryScreen extends StatelessWidget {
           const SizedBox(height: 8),
 
           // 🧾 Ride History Stream
+          
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -53,19 +55,29 @@ class RideHistoryScreen extends StatelessWidget {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                      child: Text("No ride history available."));
+                  return const Center(child: Text("No ride history available."));
                 }
 
-                final rides = snapshot.data!.docs;
+                final currentUser = FirebaseAuth.instance.currentUser;
+                final allRides = snapshot.data!.docs;
+
+                // 🔍 Filter only rides where current user is the driver
+                final userRides = allRides.where((doc) {
+                  final data = doc.data() as Map<String, dynamic>;
+                  final uid = data['driver']?['user']?['uid'];
+                  return uid == currentUser?.uid;
+                }).toList();
+
+                if (userRides.isEmpty) {
+                  return const Center(child: Text("No ride history for this account."));
+                }
 
                 return ListView.builder(
-                  itemCount: rides.length,
+                  itemCount: userRides.length,
                   itemBuilder: (context, index) {
-                    final ride = rides[index];
+                    final ride = userRides[index];
                     final data = ride.data() as Map<String, dynamic>;
-
-                    final rawDate = data["createdAt"];
+final rawDate = data["createdAt"];
                     final dateTime = rawDate is Timestamp
                         ? rawDate.toDate()
                         : DateTime.tryParse(rawDate.toString());
