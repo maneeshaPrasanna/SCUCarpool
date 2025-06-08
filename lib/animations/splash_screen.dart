@@ -85,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     color: Colors.white,
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
+                    letterSpacing: 1.5,
                   ),
                 ),
               ),
