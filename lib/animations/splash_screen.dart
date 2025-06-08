@@ -1,7 +1,6 @@
-//import '../pages/home/home_page.dart';
+
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../pages/signIn/sign_in_page.dart';
 import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,72 +10,86 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _fadeAnimation;
+class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+  late AnimationController _carController;
+  late AnimationController _textFadeController;
+  late Animation<double> _carFadeOut;
+  late Animation<double> _textFadeIn;
+  bool showText = false;
 
   @override
   void initState() {
     super.initState();
 
-    _controller = AnimationController(
+    _carController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(seconds: 2),
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.95, end: 1.05).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeInOut),
-      ),
+    _textFadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
     );
 
-    _fadeAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.6, 1.0, curve: Curves.easeOut),
-      ),
+    _carFadeOut = Tween<double>(begin: 1.0, end: 0.0).animate(
+      CurvedAnimation(parent: _carController, curve: Curves.easeOut),
     );
 
-    _controller.forward();
+    _textFadeIn = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _textFadeController, curve: Curves.easeIn),
+    );
 
-    // Delay before transitioning to home screen with a fade
-    Future.microtask(() {
-      Future.delayed(const Duration(milliseconds: 2300), () {
-        if (mounted) {
-          context.go('/signIn');
-        }
+    _carController.forward();
+
+    Timer(const Duration(seconds: 2), () {
+      setState(() {
+        showText = true;
       });
+      _textFadeController.forward();
+    });
+
+    Timer(const Duration(seconds: 5), () {
+      context.go('/signIn');
     });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _carController.dispose();
+    _textFadeController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: Center(
-          child: ScaleTransition(
-            scale: _scaleAnimation,
-            child: const Text(
-              "SCU Carpool",
-              style: TextStyle(
+      backgroundColor: const Color(0xFF811E2D),
+      body: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            FadeTransition(
+              opacity: _carFadeOut,
+              child: Icon(
+                Icons.directions_car,
+                size: 100,
                 color: Colors.white,
-                fontSize: 32,
-                letterSpacing: 6,
-                fontWeight: FontWeight.w500,
               ),
             ),
-          ),
+            if (showText)
+              FadeTransition(
+                opacity: _textFadeIn,
+                child: const Text(
+                  "SCU Carpool",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
