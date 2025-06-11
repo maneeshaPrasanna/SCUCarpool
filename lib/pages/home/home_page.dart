@@ -144,22 +144,24 @@ class HomePage extends StatelessWidget {
                   itemCount: rides.length,
                   itemBuilder: (context, index) {
                     final ride = rides[index];
+                    final user = context.read<AuthenticationBloc>().user;
+
+                    final isDriver =
+                        user != null && ride.driver.user.uid == user.uid;
+
                     return RideCard(
                       ride: ride,
-                      onJoin: () async {
-                        final user = context.read<AuthenticationBloc>().user;
-                        print('Joining ride: ${ride.id}');
-                        await context
-                            .read<RideCubit>()
-                            .joinRide(ride.id, user!);
-                        context.read<RideCubit>().selectRide(ride);
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (_) => RideDetailsScreen(ride: ride),
-                        //   ),
-                        context.pushNamed(MyRoutes.rideDetails.name,
-                            extra: ride);
-                      },
+                      onJoin: isDriver
+                          ? null
+                          : () async {
+                              print('Joining ride: ${ride.id}');
+                              await context
+                                  .read<RideCubit>()
+                                  .joinRide(ride.id, user!);
+                              context.read<RideCubit>().selectRide(ride);
+                              context.pushNamed(MyRoutes.rideDetails.name,
+                                  extra: ride);
+                            },
                     );
                   },
                 );

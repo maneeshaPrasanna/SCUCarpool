@@ -11,8 +11,16 @@ class RideHistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Ride History"),
+        centerTitle: true,
         backgroundColor: const Color(0xFF811E2D),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text('Ride History'),
+        elevation: 2,
+        titleTextStyle: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
       body: Column(
         children: [

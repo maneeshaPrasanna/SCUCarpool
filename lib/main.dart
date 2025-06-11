@@ -125,8 +125,14 @@ class MyApp extends StatelessWidget {
               return MaterialApp.router(
                 debugShowCheckedModeBanner: false,
                 title: 'Santa Clara',
-                theme: theme.light(),
-                darkTheme: theme.dark(),
+                theme: theme.light().copyWith(
+                      textTheme:
+                          theme.light().textTheme.apply(fontFamily: 'Poppins'),
+                    ),
+                darkTheme: theme.dark().copyWith(
+                      textTheme:
+                          theme.dark().textTheme.apply(fontFamily: 'Poppins'),
+                    ),
                 highContrastTheme: theme.lightHighContrast(),
                 highContrastDarkTheme: theme.darkHighContrast(),
                 themeMode: state.themeMode,

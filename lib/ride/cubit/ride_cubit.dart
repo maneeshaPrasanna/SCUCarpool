@@ -106,33 +106,52 @@ class RideCubit extends Cubit<RideState> {
     }
   }
 
-  Future<void> loadMyRidesSplit(String userId) async {
-    emit(RideLoading());
-    try {
-      final querySnapshot = await firestore
-          .collection('rides')
-          .where('driver.user.uid', isEqualTo: userId)
-          .get();
+ Future<void> loadMyRidesSplit(String userId) async {
+  emit(RideLoading());
+  try {
+    final now = DateTime.now();
 
-      final now = DateTime.now();
-      final allRides = querySnapshot.docs
-          .map((doc) => Ride.fromMap(doc.id, doc.data()))
-          .toList();
+    // 1. 用户是司机的 rides
+    final driverQuerySnapshot = await firestore
+        .collection('rides')
+        .where('driver.user.uid', isEqualTo: userId)
+        .get();
 
-      final upcoming = allRides
-          .where((r) => r.departureTime.isAfter(now))
-          .toList()
-        ..sort((a, b) => (b.createdAt ?? DateTime(1970))
-            .compareTo(a.createdAt ?? DateTime(1970)));
+    final driverRides = driverQuerySnapshot.docs
+        .map((doc) => Ride.fromMapWithUser(doc.id, doc.data(), userId))
+        .toList();
 
-      final past =
-          allRides.where((r) => r.departureTime.isBefore(now)).toList();
+    // 2. 用户是乘客的 rides（先加载所有包含 uid 的，再筛选）
+    final passengerQuerySnapshot = await firestore
+        .collection('rides')
+        .where('joinedUsers', isNotEqualTo: null) // 过滤掉没有该字段的文档
+        .get();
 
-      emit(RideSplitLoaded(upcoming: upcoming, past: past));
-    } catch (e) {
-      emit(RideError('Failed to load rides: $e'));
-    }
+    final passengerRidesRaw = passengerQuerySnapshot.docs
+        .map((doc) => Ride.fromMapWithUser(doc.id, doc.data(), userId))
+        .where((ride) => ride.hasJoined)
+        .toList();
+
+    // 去重合并（可选：避免司机和乘客重复）
+    final allRides = {
+      for (var r in [...driverRides, ...passengerRidesRaw]) r.id: r
+    }.values.toList();
+
+    final upcoming = allRides
+        .where((r) => r.departureTime.isAfter(now))
+        .toList()
+      ..sort((a, b) => (b.createdAt ?? DateTime(1970))
+          .compareTo(a.createdAt ?? DateTime(1970)));
+
+    final past = allRides.where((r) => r.departureTime.isBefore(now)).toList();
+
+    emit(RideSplitLoaded(upcoming: upcoming, past: past));
+  } catch (e) {
+    emit(RideError('Failed to load rides: $e'));
   }
+}
+
+
 
   void clearRideSearchState() {
     _pickup = null;
