@@ -131,5 +131,4 @@ flutter:
     - family: Poppins
       fonts:
         - asset: assets/icons/Poppins-Regular.ttf
-        - asset: assets/icons/Poppins-Bold.ttf
-          weight: 700
+
